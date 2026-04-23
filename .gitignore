@@ -1,0 +1,7 @@
+node_modules
+dist
+build-out
+.vite
+.DS_Store
+*.log
+vite.config.js.timestamp-*

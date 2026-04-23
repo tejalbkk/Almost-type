@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #faf7f2;
+  color: #0e0e10;
+  overscroll-behavior: none;
+}
+
+/* Disable pull-to-refresh on the swipe surface */
+.no-overscroll {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* Swipe surface should own its gestures */
+.swipe-surface {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Remove the default blue on tap for interactive elements */
+button,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cfcabf;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Hairline border helper */
+.hair {
+  border-color: #e7e3dc;
+}
+
+/* Safe-area helpers */
+.safe-top {
+  padding-top: max(env(safe-area-inset-top), 12px);
+}
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
+}
+
+/* 60-30-10 palette proportional swatches use these flex ratios */
+.prop-60 {
+  flex: 6 1 0;
+}
+.prop-30 {
+  flex: 3 1 0;
+}
+.prop-10 {
+  flex: 1 1 0;
+}
