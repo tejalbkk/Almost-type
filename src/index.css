@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
   background: #faf7f2;
   color: #0e0e10;
   overscroll-behavior: none;
@@ -30,11 +30,17 @@ body {
   touch-action: pan-y;
 }
 
-/* Swipe surface should own its gestures */
+/* Swipe surface owns horizontal gestures, browser handles vertical scroll */
 .swipe-surface {
-  touch-action: none;
+  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Smooth inertial scroll inside the card on iOS */
+.card-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 /* Remove the default blue on tap for interactive elements */

@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Undo2, ArrowLeft, ArrowRight } from 'lucide-react'
 import SwipeCard from './SwipeCard.jsx'
 import ShareSheet from './ShareSheet.jsx'
 import NoteSheet from './NoteSheet.jsx'
 import { buildDeck } from '../data/cards.js'
+import { storage } from '../lib/storage.js'
 
-// Type School swipe-stack per PRD §4.2. Front card + 2 background cards,
-// undo, programmatic swipes via action buttons, note/share sheets.
+// Type School swipe-stack per PRD §4.2. Full-bleed card stack, swipe-only
+// gestures (no action buttons), first-time tutorial overlay with swipe hints.
 
 export default function TypeSchool({ library, setLibrary }) {
   const [queue, setQueue] = useState(() => buildDeck())
@@ -13,6 +15,9 @@ export default function TypeSchool({ library, setLibrary }) {
   const [expandedId, setExpandedId] = useState(null)
   const [shareCard, setShareCard] = useState(null)
   const [noteCard, setNoteCard] = useState(null)
+  const [showTutorial, setShowTutorial] = useState(
+    () => !storage.get('seenSwipeTutorial', false)
+  )
   const topCardRef = useRef(null)
 
   // Top up the queue when it runs low (PRD §4.2.3: pre-generate next cards)
@@ -22,12 +27,19 @@ export default function TypeSchool({ library, setLibrary }) {
     }
   }, [queue.length])
 
+  const dismissTutorial = () => {
+    if (!showTutorial) return
+    setShowTutorial(false)
+    storage.set('seenSwipeTutorial', true)
+  }
+
   const top = queue[0]
   const behind = queue.slice(1, 3)
 
   const handleDecision = (_id, direction) => {
     const card = top
     if (!card) return
+    dismissTutorial()
     setHistory((h) => [...h.slice(-9), { card, decision: direction }])
     if (direction === 'like') {
       setLibrary((lib) => ({
@@ -43,9 +55,6 @@ export default function TypeSchool({ library, setLibrary }) {
     setQueue((q) => q.slice(1))
     setExpandedId(null)
   }
-
-  const handleLikeBtn = () => topCardRef.current?.fly('like')
-  const handleSkipBtn = () => topCardRef.current?.fly('notnow')
 
   const handleUndo = () => {
     const last = history[history.length - 1]
@@ -67,42 +76,12 @@ export default function TypeSchool({ library, setLibrary }) {
     }))
   }
 
-  const decoratedTop = useMemo(() => {
-    if (!top) return null
-    return {
-      ...top,
-      __actions: (
-        <div className="flex items-center gap-1">
-          <IconButton
-            label="Add note"
-            onClick={() => setNoteCard(top)}
-            active={!!library.notes[top.id]}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-              <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z" />
-              <path d="M9 12h6" />
-              <path d="M9 16h4" />
-            </svg>
-          </IconButton>
-          <IconButton label="Share card" onClick={() => setShareCard(top)}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" />
-              <polyline points="16 6 12 2 8 6" />
-              <line x1="12" y1="2" x2="12" y2="15" />
-            </svg>
-          </IconButton>
-        </div>
-      )
-    }
-  }, [top, library.notes])
-
   return (
     <div className="flex flex-col h-full">
-      <Header history={history} />
+      <Header history={history} onUndo={handleUndo} />
 
-      <div className="relative flex-1 px-5 pt-3">
-        <div className="relative mx-auto w-full max-w-[400px] h-full min-h-[480px]">
+      <div className="relative flex-1 min-h-0 px-4 pt-2 pb-4">
+        <div className="relative mx-auto w-full max-w-[440px] h-full">
           {behind
             .slice()
             .reverse()
@@ -113,52 +92,25 @@ export default function TypeSchool({ library, setLibrary }) {
                 depth={behind.length - i}
               />
             ))}
-          {decoratedTop && (
+          {top && (
             <SwipeCard
               ref={topCardRef}
-              key={decoratedTop.id}
-              card={decoratedTop}
+              key={top.id}
+              card={top}
               depth={0}
               expanded={expandedId === top.id}
               onExpandToggle={(id) => setExpandedId((e) => (e === id ? null : id))}
               onDecision={handleDecision}
+              onShare={(card) => setShareCard(card)}
+              onNote={(card) => setNoteCard(card)}
+              hasNote={!!library.notes[top.id]}
             />
           )}
-        </div>
-      </div>
 
-      <div className="px-5 pt-3 pb-4 flex items-center justify-center gap-4 safe-bottom">
-        <ControlButton
-          label="Not now"
-          onClick={handleSkipBtn}
-          className="bg-paper border hair text-ink hover:bg-ink/5"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </ControlButton>
-        <ControlButton
-          label="Undo"
-          onClick={handleUndo}
-          disabled={history.length === 0}
-          size="sm"
-          className="bg-paper border hair text-ink/70 hover:text-ink disabled:opacity-30"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 7v6h6" />
-            <path d="M21 17a9 9 0 0 0-15-6.7L3 13" />
-          </svg>
-        </ControlButton>
-        <ControlButton
-          label="Like"
-          onClick={handleLikeBtn}
-          className="bg-almost text-paper hover:brightness-105"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 21s-7-4.35-7-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 19 11c0 5.65-7 10-7 10z" />
-          </svg>
-        </ControlButton>
+          {showTutorial && top && (
+            <TutorialOverlay onDismiss={dismissTutorial} />
+          )}
+        </div>
       </div>
 
       {shareCard && <ShareSheet card={shareCard} onClose={() => setShareCard(null)} />}
@@ -174,45 +126,63 @@ export default function TypeSchool({ library, setLibrary }) {
   )
 }
 
-function Header({ history }) {
+function Header({ history, onUndo }) {
   return (
-    <div className="px-5 pt-4 pb-2 flex items-baseline justify-between">
+    <div className="px-5 pt-3 pb-2 flex items-center justify-between">
       <div>
-        <div className="font-serif italic text-[22px] leading-none text-ink">Type School</div>
+        <div className="font-display italic text-[22px] leading-none text-ink">
+          Type School
+        </div>
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
           {history.length === 0 ? 'a fresh stack' : `${history.length} read so far`}
         </div>
       </div>
+      {history.length > 0 && (
+        <button
+          type="button"
+          onClick={onUndo}
+          className="inline-flex items-center gap-1.5 text-[12px] font-medium text-ink/60 hover:text-ink"
+          aria-label="Undo last swipe"
+        >
+          <Undo2 size={14} strokeWidth={2} />
+          Undo
+        </button>
+      )}
     </div>
   )
 }
 
-function IconButton({ children, onClick, label, active }) {
+function TutorialOverlay({ onDismiss }) {
   return (
     <button
       type="button"
-      onClick={onClick}
-      aria-label={label}
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border hair transition ${
-        active ? 'bg-ink text-paper border-ink' : 'bg-white text-ink/70 hover:text-ink'
-      }`}
+      onClick={onDismiss}
+      className="absolute inset-0 z-20 rounded-3xl bg-ink/40 backdrop-blur-[2px] flex flex-col items-center justify-center px-6 animate-fade-in cursor-pointer"
+      aria-label="Dismiss tutorial"
     >
-      {children}
-    </button>
-  )
-}
-
-function ControlButton({ children, onClick, disabled, label, size, className = '' }) {
-  const dim = size === 'sm' ? 'h-12 w-12' : 'h-16 w-16'
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      disabled={disabled}
-      className={`inline-flex ${dim} items-center justify-center rounded-full shadow-card transition ${className}`}
-    >
-      {children}
+      <div className="text-[11px] font-mono uppercase tracking-widest text-paper/80 mb-4">
+        how it works
+      </div>
+      <div className="font-display italic text-[28px] leading-[1.1] text-paper text-center">
+        Swipe right to like.<br />Swipe left to skip.
+      </div>
+      <div className="mt-7 flex items-center justify-between w-full max-w-[300px]">
+        <div className="flex items-center gap-2 text-paper">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-paper/10 border border-paper/30">
+            <ArrowLeft size={20} strokeWidth={2.2} />
+          </span>
+          <span className="font-mono text-[11px] uppercase tracking-widest">Skip</span>
+        </div>
+        <div className="flex items-center gap-2 text-paper">
+          <span className="font-mono text-[11px] uppercase tracking-widest">Like</span>
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-almost border border-almost text-paper">
+            <ArrowRight size={20} strokeWidth={2.2} />
+          </span>
+        </div>
+      </div>
+      <div className="mt-8 text-[12px] text-paper/70 font-medium">
+        tap anywhere to start
+      </div>
     </button>
   )
 }

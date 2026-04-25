@@ -56,8 +56,8 @@ function TopBar({ tab }) {
   return (
     <div className="safe-top px-5 pb-1 flex items-center justify-between">
       <div className="flex items-baseline gap-2">
-        <span className="font-serif italic text-[18px] text-ink leading-none">almost,</span>
-        <span className="font-serif italic text-[18px] text-almost leading-none">type.</span>
+        <span className="font-display italic text-[18px] text-ink leading-none">almost,</span>
+        <span className="font-display italic text-[18px] text-almost leading-none">type.</span>
       </div>
       <span className="text-[11px] font-mono uppercase tracking-widest text-muted">{labels[tab]}</span>
     </div>
@@ -71,10 +71,10 @@ function Intro({ onDone, onStart }) {
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted mb-3">
           almost, type.
         </div>
-        <h1 className="font-serif italic text-[44px] leading-[1.02] text-ink">
-          you’re learning.<br />it shows.
+        <h1 className="font-display italic text-[44px] leading-[1.02] text-ink">
+          you're learning.<br />it shows.
         </h1>
-        <p className="font-serif italic text-[22px] text-almost mt-2">that’s the point.</p>
+        <p className="font-display italic text-[22px] text-almost mt-2">that's the point.</p>
         <p className="text-[15px] leading-snug text-ink/75 mt-5 max-w-[32ch]">
           Typography, one swipe at a time. No login. No homework. Just the muscle your designer friend built over years — compressed.
         </p>

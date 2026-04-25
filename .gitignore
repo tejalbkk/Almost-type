@@ -1,6 +1,7 @@
 node_modules
 dist
 build-out
+test-build
 .vite
 .DS_Store
 *.log

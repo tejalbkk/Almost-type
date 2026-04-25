@@ -11,8 +11,13 @@ export default {
         hair: '#E7E3DC'
       },
       fontFamily: {
-        serif: ['"Fraunces"', '"Georgia"', 'serif'],
-        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+        // `display` is the headline font. Currently Bodoni Moda (closest free
+        // match to Editor's Note). To use the real Editor's Note, drop the
+        // .woff2 in /public/fonts/, add an @font-face rule in src/index.css,
+        // and put "Editors Note" first in this stack.
+        display: ['"Editors Note"', '"Bodoni Moda"', '"Georgia"', 'serif'],
+        serif: ['"Bodoni Moda"', '"Georgia"', 'serif'],
+        sans: ['"Inter Tight"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
       },
       boxShadow: {
