@@ -11,14 +11,13 @@ export default {
         hair: '#E7E3DC'
       },
       fontFamily: {
-        // `display` is the headline font. Currently Bodoni Moda (closest free
-        // match to Editor's Note). To use the real Editor's Note, drop the
-        // .woff2 in /public/fonts/, add an @font-face rule in src/index.css,
-        // and put "Editors Note" first in this stack.
-        display: ['"Editors Note"', '"Bodoni Moda"', '"Georgia"', 'serif'],
-        serif: ['"Bodoni Moda"', '"Georgia"', 'serif'],
+        // `display` is the headline font — Instrument Serif everywhere.
+        display: ['"Instrument Serif"', '"Georgia"', 'serif'],
+        serif: ['"Instrument Serif"', '"Georgia"', 'serif'],
         sans: ['"Inter Tight"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Logo wordmark — Helvetica on Apple devices, Arial elsewhere.
+        logo: ['"Helvetica Neue"', '"Helvetica"', '"Arial"', 'sans-serif']
       },
       boxShadow: {
         card: '0 10px 30px -8px rgba(14,14,16,0.18), 0 2px 8px -2px rgba(14,14,16,0.08)',

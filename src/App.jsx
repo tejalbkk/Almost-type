@@ -55,9 +55,9 @@ function TopBar({ tab }) {
   }
   return (
     <div className="safe-top px-5 pb-1 flex items-center justify-between">
-      <div className="flex items-baseline gap-2">
-        <span className="font-display italic text-[18px] text-ink leading-none">almost,</span>
-        <span className="font-display italic text-[18px] text-almost leading-none">type.</span>
+      <div className="flex items-baseline gap-1">
+        <span className="font-logo italic font-bold text-[18px] text-ink leading-none tracking-tight">almost,</span>
+        <span className="font-logo italic font-bold text-[18px] text-almost leading-none tracking-tight">type.</span>
       </div>
       <span className="text-[11px] font-mono uppercase tracking-widest text-muted">{labels[tab]}</span>
     </div>
