@@ -130,7 +130,7 @@ function Header({ history, onUndo }) {
   return (
     <div className="px-5 pt-3 pb-2 flex items-center justify-between">
       <div>
-        <div className="font-display italic text-[22px] leading-none text-ink">
+        <div className="font-display font-semibold text-[22px] leading-none text-ink">
           Type School
         </div>
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
@@ -163,7 +163,7 @@ function TutorialOverlay({ onDismiss }) {
       <div className="text-[11px] font-mono uppercase tracking-widest text-paper/80 mb-4">
         how it works
       </div>
-      <div className="font-display italic text-[28px] leading-[1.1] text-paper text-center">
+      <div className="font-display font-semibold text-[28px] leading-[1.1] text-paper text-center">
         Swipe right to like.<br />Swipe left to skip.
       </div>
       <div className="mt-7 flex items-center justify-between w-full max-w-[300px]">

@@ -57,7 +57,7 @@ export default function ShareSheet({ card, onClose }) {
         </div>
         <div className="px-5 pt-2 pb-5">
           <div className="text-xs font-mono uppercase tracking-widest text-muted mb-1">Share</div>
-          <div className="font-serif italic text-xl leading-snug text-ink mb-4">{card.title}</div>
+          <div className="font-serif font-semibold text-xl leading-snug text-ink mb-4">{card.title}</div>
 
           <button
             type="button"

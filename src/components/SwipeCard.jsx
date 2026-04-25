@@ -186,7 +186,7 @@ const SwipeCard = forwardRef(function SwipeCard(
           className="flex-1 overflow-y-auto px-6 pb-3 card-scroll"
           data-nodrag-vertical
         >
-          <h2 className="font-display text-[30px] leading-[1.05] text-ink italic">
+          <h2 className="font-display font-semibold text-[30px] leading-[1.05] text-ink">
             {card.title}
           </h2>
 

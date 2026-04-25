@@ -71,10 +71,10 @@ function Intro({ onDone, onStart }) {
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted mb-3">
           almost, type.
         </div>
-        <h1 className="font-display italic text-[44px] leading-[1.02] text-ink">
+        <h1 className="font-display font-semibold text-[44px] leading-[1.02] text-ink">
           you're learning.<br />it shows.
         </h1>
-        <p className="font-display italic text-[22px] text-almost mt-2">that's the point.</p>
+        <p className="font-display font-semibold text-[22px] text-almost mt-2">that's the point.</p>
         <p className="text-[15px] leading-snug text-ink/75 mt-5 max-w-[32ch]">
           Typography, one swipe at a time. No login. No homework. Just the muscle your designer friend built over years — compressed.
         </p>

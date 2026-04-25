@@ -46,7 +46,7 @@ export default function Library({ library, setLibrary }) {
   return (
     <div className="flex flex-col h-full overflow-y-auto pb-8">
       <div className="px-5 pt-5">
-        <div className="font-serif italic text-[24px] leading-none text-ink">Library</div>
+        <div className="font-serif font-semibold text-[24px] leading-none text-ink">Library</div>
         <div className="text-[13px] text-muted mt-1">
           The ones that clicked. And the ones that didn’t — yet.
         </div>
@@ -107,7 +107,7 @@ function TabChip({ active, onClick, children }) {
 function EmptyState({ tab }) {
   return (
     <div className="rounded-2xl border hair bg-white p-6 text-center">
-      <div className="font-serif italic text-[18px] leading-snug text-ink">
+      <div className="font-serif font-semibold text-[18px] leading-snug text-ink">
         {tab === 'liked' ? 'Nothing here yet.' : 'Nothing skipped — yet.'}
       </div>
       <div className="text-[13px] text-muted mt-2">
@@ -131,7 +131,7 @@ function SavedRow({ card, note, inLiked, onShare, onEditNote, onMove, onRemove }
           {inLiked ? 'Liked' : 'Not now'}
         </span>
       </div>
-      <div className="font-serif italic text-[18px] leading-snug text-ink mt-2">{card.title}</div>
+      <div className="font-serif font-semibold text-[18px] leading-snug text-ink mt-2">{card.title}</div>
       <div className="text-[13px] text-ink/75 mt-1">try: {card.tip}</div>
       {note?.text && (
         <div className="mt-3 rounded-xl bg-[#FFF8E7] border border-[#F2E2A8] p-3">

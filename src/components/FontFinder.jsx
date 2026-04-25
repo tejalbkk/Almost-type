@@ -41,7 +41,7 @@ export default function FontFinder() {
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <div className="px-5 pt-5">
-        <div className="font-serif italic text-[24px] leading-none text-ink">Font Finder</div>
+        <div className="font-serif font-semibold text-[24px] leading-none text-ink">Font Finder</div>
         <div className="text-[13px] text-muted mt-1">
           Describe the vibe. Get fonts, palettes, and a mock you can read.
         </div>
@@ -148,7 +148,7 @@ function Empty() {
   return (
     <div className="px-5 mt-6">
       <div className="rounded-2xl border hair bg-white p-5">
-        <div className="font-serif italic text-[18px] text-ink leading-snug">
+        <div className="font-serif font-semibold text-[18px] text-ink leading-snug">
           Tell us a vibe. We’ll give you four fonts, four palettes, and a mock you can almost ship.
         </div>
         <div className="text-[13px] text-muted mt-2">
@@ -207,7 +207,7 @@ function PaletteCard({ palette, selected, onSelect }) {
       }`}
     >
       <div className="flex items-baseline justify-between">
-        <div className="font-serif italic text-[18px] text-ink">{palette.name}</div>
+        <div className="font-serif font-semibold text-[18px] text-ink">{palette.name}</div>
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted">60 · 30 · 10</div>
       </div>
       <div className="text-[12.5px] italic text-ink/70 mt-1 mb-3">{palette.blurb}</div>
@@ -252,7 +252,7 @@ function LivePreview({ headingFont, bodyFont, palette }) {
           style={{ borderColor: 'rgba(0,0,0,0.08)' }}
         >
           <div
-            className="font-serif italic text-[18px]"
+            className="font-serif font-semibold text-[18px]"
             style={{ fontFamily: `"${headingFont}", serif` }}
           >
             almost, type.

@@ -45,7 +45,7 @@ export default function EyeTraining() {
     <div className="flex flex-col h-full overflow-y-auto pb-6">
       <div className="px-5 pt-5 flex items-baseline justify-between">
         <div>
-          <div className="font-serif italic text-[24px] leading-none text-ink">Eye Training</div>
+          <div className="font-serif font-semibold text-[24px] leading-none text-ink">Eye Training</div>
           <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
             Round {idx + 1} of {rounds.length} · {round.topic}
           </div>
@@ -204,7 +204,7 @@ function EyeSummary({ score, total, onRestart }) {
   return (
     <div className="flex flex-col h-full items-center justify-center px-6 text-center">
       <div className="text-[11px] font-mono uppercase tracking-widest text-muted">Session complete</div>
-      <div className="font-serif italic text-[48px] leading-none text-ink mt-2">{score}/{total}</div>
+      <div className="font-serif font-semibold text-[48px] leading-none text-ink mt-2">{score}/{total}</div>
       <div className="text-[15px] text-ink/75 mt-3 max-w-[32ch]">{line}</div>
       <button
         onClick={onRestart}

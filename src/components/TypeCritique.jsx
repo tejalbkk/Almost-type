@@ -23,7 +23,7 @@ export default function TypeCritique() {
   return (
     <div className="flex flex-col h-full overflow-y-auto pb-8">
       <div className="px-5 pt-5">
-        <div className="font-serif italic text-[24px] leading-none text-ink">Type Critique</div>
+        <div className="font-serif font-semibold text-[24px] leading-none text-ink">Type Critique</div>
         <div className="text-[13px] text-muted mt-1 italic">
           we will not lie to protect your feelings.
         </div>
@@ -66,7 +66,7 @@ function CritiqueResult({ r }) {
             {r.score}/10
           </span>
         </div>
-        <div className="font-serif italic text-[20px] leading-snug text-ink mt-2">{r.verdict}</div>
+        <div className="font-serif font-semibold text-[20px] leading-snug text-ink mt-2">{r.verdict}</div>
       </div>
 
       <Block label="What’s working">
@@ -103,7 +103,7 @@ function CritiqueResult({ r }) {
       </div>
 
       <div className="rounded-2xl border hair bg-white p-5">
-        <div className="font-serif italic text-[16px] leading-snug text-ink">{r.closing}</div>
+        <div className="font-serif font-semibold text-[16px] leading-snug text-ink">{r.closing}</div>
       </div>
     </div>
   )

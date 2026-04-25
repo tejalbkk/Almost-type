@@ -36,7 +36,7 @@ export default function NoteSheet({ card, initialNote, onSave, onClose }) {
         </div>
         <div className="px-5 pt-2 pb-5">
           <div className="text-xs font-mono uppercase tracking-widest text-muted mb-1">Note</div>
-          <div className="font-serif italic text-lg leading-snug text-ink mb-3">{card.title}</div>
+          <div className="font-serif font-semibold text-lg leading-snug text-ink mb-3">{card.title}</div>
           <textarea
             ref={ref}
             value={text}
