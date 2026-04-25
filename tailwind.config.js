@@ -11,9 +11,9 @@ export default {
         hair: '#E7E3DC'
       },
       fontFamily: {
-        // `display` is the headline font — Instrument Serif everywhere.
-        display: ['"Instrument Serif"', '"Georgia"', 'serif'],
-        serif: ['"Instrument Serif"', '"Georgia"', 'serif'],
+        // `display` is the headline font — Montserrat everywhere.
+        display: ['"Montserrat"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Montserrat"', 'system-ui', '-apple-system', 'sans-serif'],
         sans: ['"Inter Tight"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
         // Logo wordmark — Helvetica on Apple devices, Arial elsewhere.
