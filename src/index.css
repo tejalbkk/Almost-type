@@ -24,6 +24,13 @@ body {
   overscroll-behavior: none;
 }
 
+/* Headings: Montserrat is geometrically wide, so we tighten by 3% */
+.font-display,
+.font-serif,
+.font-logo {
+  letter-spacing: -0.03em;
+}
+
 /* Disable pull-to-refresh on the swipe surface */
 .no-overscroll {
   overscroll-behavior: contain;
