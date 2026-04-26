@@ -11,12 +11,29 @@ import { storage } from './lib/storage.js'
 // per PRD §6.1. Desktop falls back to a centred column that keeps the
 // phone-native feel.
 
-const emptyLibrary = { liked: [], notnow: [], notes: {} }
+const emptyLibrary = { liked: [], likedQuestions: [], notes: {} }
+
+function normalizeLibrary(raw) {
+  return {
+    liked: Array.isArray(raw?.liked) ? raw.liked : [],
+    likedQuestions: Array.isArray(raw?.likedQuestions) ? raw.likedQuestions : [],
+    notes: raw?.notes && typeof raw.notes === 'object' ? raw.notes : {}
+  }
+}
 
 export default function App() {
   const [tab, setTab] = useState('school')
-  const [library, setLibrary] = useState(() => storage.get('library', emptyLibrary))
+  const [library, setLibrary] = useState(() => normalizeLibrary(storage.get('library', emptyLibrary)))
   const [seenIntro, setSeenIntro] = useState(() => storage.get('seenIntro', false))
+
+  // Wrapper so EyeTraining can update likedQuestions in isolation.
+  const setLikedQuestions = (updater) => {
+    setLibrary((lib) => ({
+      ...lib,
+      likedQuestions:
+        typeof updater === 'function' ? updater(lib.likedQuestions || []) : updater
+    }))
+  }
 
   // v1.1 preview: persist liked/notes to localStorage. Safe to ship now.
   useEffect(() => {
@@ -35,7 +52,12 @@ export default function App() {
           {tab === 'school' && <TypeSchool library={library} setLibrary={setLibrary} />}
           {tab === 'finder' && <FontFinder />}
           {tab === 'critique' && <TypeCritique />}
-          {tab === 'eye' && <EyeTraining />}
+          {tab === 'eye' && (
+            <EyeTraining
+              likedQuestions={library.likedQuestions}
+              setLikedQuestions={setLikedQuestions}
+            />
+          )}
           {tab === 'library' && <Library library={library} setLibrary={setLibrary} />}
         </main>
         <BottomNav tab={tab} onChange={setTab} />
@@ -56,8 +78,8 @@ function TopBar({ tab }) {
   return (
     <div className="safe-top px-5 pb-1 flex items-center justify-between">
       <div className="flex items-baseline gap-1">
-        <span className="font-logo italic font-bold text-[18px] text-ink leading-none tracking-tight">almost,</span>
-        <span className="font-logo italic font-bold text-[18px] text-almost leading-none tracking-tight">type.</span>
+        <span className="font-logo font-semibold text-[18px] text-ink leading-none tracking-tight">almost,</span>
+        <span className="font-logo font-semibold text-[18px] text-almost leading-none tracking-tight">type.</span>
       </div>
       <span className="text-[11px] font-mono uppercase tracking-widest text-muted">{labels[tab]}</span>
     </div>

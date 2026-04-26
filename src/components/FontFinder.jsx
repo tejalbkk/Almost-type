@@ -1,32 +1,71 @@
 import { useEffect, useMemo, useState } from 'react'
-import { findBundle, quickChips } from '../data/fonts.js'
+import { RefreshCw, Shuffle } from 'lucide-react'
+import { findBundle, fontBundles, pickN, quickChips } from '../data/fonts.js'
 import { loadFontsBundle, loadGoogleFont } from '../lib/fontLoader.js'
 import { readableOn, subduedOn } from '../lib/contrast.js'
 
-// Font Finder per PRD §4.3. Keyword → 4 fonts + 4 palettes + live preview.
+// Font Finder per PRD §4.3 — keyword to a vibe bundle, then live preview.
+// New: each bundle has a POOL of fonts and palettes, and the user can
+// infinitely refresh fonts, palettes, or roll a different vibe entirely.
+
+const SHOW_COUNT = 4
 
 export default function FontFinder() {
   const [query, setQuery] = useState('')
   const [bundle, setBundle] = useState(null)
+  const [fonts, setFonts] = useState([])
+  const [palettes, setPalettes] = useState([])
   const [selectedFont, setSelectedFont] = useState(null)
   const [selectedPalette, setSelectedPalette] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  // Load whatever fonts are currently visible
   useEffect(() => {
-    if (bundle) loadFontsBundle(bundle)
-  }, [bundle])
+    fonts.forEach((f) => loadGoogleFont(f.googleParam))
+  }, [fonts])
 
   const generate = (input) => {
     setLoading(true)
-    // Simulate the "< 4s" PRD target with a short delay for perceived responsiveness
     window.setTimeout(() => {
       const b = findBundle(input)
+      const fs = pickN(b.fontPool, SHOW_COUNT)
+      const ps = pickN(b.palettePool, SHOW_COUNT, new Set(), (x) => x.name)
       setBundle(b)
-      setSelectedFont(b.fonts.find((f) => /body/i.test(f.role)) || b.fonts[0])
-      // Pick the first palette by default; user can change it
-      setSelectedPalette(b.palettes[0])
+      setFonts(fs)
+      setPalettes(ps)
+      setSelectedFont(fs.find((f) => /body/i.test(f.role)) || fs[0])
+      setSelectedPalette(ps[0])
       setLoading(false)
     }, 280)
+  }
+
+  const refreshFonts = () => {
+    if (!bundle) return
+    const exclude = new Set(fonts.map((f) => f.family))
+    const fs = pickN(bundle.fontPool, SHOW_COUNT, exclude)
+    setFonts(fs)
+    setSelectedFont(fs.find((f) => /body/i.test(f.role)) || fs[0])
+  }
+
+  const refreshPalettes = () => {
+    if (!bundle) return
+    const exclude = new Set(palettes.map((p) => p.name))
+    const ps = pickN(bundle.palettePool, SHOW_COUNT, exclude, (x) => x.name)
+    setPalettes(ps)
+    setSelectedPalette(ps[0])
+  }
+
+  const tryDifferentVibe = () => {
+    // Pick a random bundle different to the current one
+    const others = fontBundles.filter((b) => b !== bundle)
+    const next = others[Math.floor(Math.random() * others.length)] || bundle
+    const fs = pickN(next.fontPool, SHOW_COUNT)
+    const ps = pickN(next.palettePool, SHOW_COUNT, new Set(), (x) => x.name)
+    setBundle(next)
+    setFonts(fs)
+    setPalettes(ps)
+    setSelectedFont(fs.find((f) => /body/i.test(f.role)) || fs[0])
+    setSelectedPalette(ps[0])
   }
 
   const onSubmit = (e) => {
@@ -35,8 +74,11 @@ export default function FontFinder() {
     generate(query.trim())
   }
 
-  const headingFont = bundle?.fonts.find((f) => /display|headline/i.test(f.role)) || bundle?.fonts[0]
-  const bodyFont = bundle?.fonts.find((f) => /body/i.test(f.role)) || bundle?.fonts[0]
+  const headingFont = selectedFont?.family || fonts[0]?.family
+  const bodyFont = useMemo(
+    () => fonts.find((f) => /body/i.test(f.role))?.family || fonts[0]?.family,
+    [fonts]
+  )
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -80,21 +122,19 @@ export default function FontFinder() {
         </div>
       </div>
 
-      {!bundle && !loading && (
-        <Empty />
-      )}
+      {!bundle && !loading && <Empty />}
 
       {bundle && (
         <div className="px-5 mt-5 pb-8 space-y-6">
           <div>
             <SectionLabel>Summary</SectionLabel>
-            <p className="text-[14.5px] leading-snug text-ink/85 italic">{bundle.summary}</p>
+            <p className="text-[14.5px] leading-snug text-ink/85">{bundle.summary}</p>
           </div>
 
           <div>
-            <SectionLabel>Fonts</SectionLabel>
+            <SectionHeader label="Fonts" onRefresh={refreshFonts} refreshLabel="New fonts" />
             <div className="grid grid-cols-1 gap-3">
-              {bundle.fonts.map((f) => (
+              {fonts.map((f) => (
                 <FontCard
                   key={f.family + f.role}
                   font={f}
@@ -109,9 +149,9 @@ export default function FontFinder() {
           </div>
 
           <div>
-            <SectionLabel>Palettes</SectionLabel>
+            <SectionHeader label="Palettes" onRefresh={refreshPalettes} refreshLabel="New palettes" />
             <div className="grid grid-cols-1 gap-3">
-              {bundle.palettes.map((p) => (
+              {palettes.map((p) => (
                 <PaletteCard
                   key={p.name}
                   palette={p}
@@ -125,11 +165,20 @@ export default function FontFinder() {
           <div>
             <SectionLabel>Live preview</SectionLabel>
             <LivePreview
-              headingFont={selectedFont?.family || headingFont?.family}
-              bodyFont={bodyFont?.family}
+              headingFont={headingFont}
+              bodyFont={bodyFont}
               palette={selectedPalette}
             />
           </div>
+
+          <button
+            type="button"
+            onClick={tryDifferentVibe}
+            className="w-full py-3.5 rounded-2xl border hair bg-white text-ink/80 hover:text-ink text-[14px] font-medium inline-flex items-center justify-center gap-2"
+          >
+            <Shuffle size={16} strokeWidth={2} />
+            Surprise me — try a different vibe
+          </button>
         </div>
       )}
     </div>
@@ -144,6 +193,23 @@ function SectionLabel({ children }) {
   )
 }
 
+function SectionHeader({ label, onRefresh, refreshLabel }) {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <SectionLabel>{label}</SectionLabel>
+      <button
+        type="button"
+        onClick={onRefresh}
+        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink/60 hover:text-ink px-2 py-1 -mr-2 rounded-md hover:bg-ink/5"
+        aria-label={refreshLabel}
+      >
+        <RefreshCw size={13} strokeWidth={2} />
+        {refreshLabel}
+      </button>
+    </div>
+  )
+}
+
 function Empty() {
   return (
     <div className="px-5 mt-6">
@@ -152,7 +218,7 @@ function Empty() {
           Tell us a vibe. We’ll give you four fonts, four palettes, and a mock you can almost ship.
         </div>
         <div className="text-[13px] text-muted mt-2">
-          Try: “playful learning app”, “brutalist tech startup”, or “calm wellness brand.”
+          Try: “playful learning app”, “art gallery”, or “creative agency.”
         </div>
       </div>
     </div>
@@ -184,7 +250,7 @@ function FontCard({ font, selected, onSelect }) {
       >
         {font.body}
       </div>
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-3 flex items-center gap-2 flex-wrap">
         <span className="text-[11px] px-2 py-0.5 rounded-full bg-ink/5 border hair text-ink/70 font-medium">
           {font.family}
         </span>
@@ -192,7 +258,6 @@ function FontCard({ font, selected, onSelect }) {
           {font.tag}
         </span>
       </div>
-      <div className="text-[13px] italic text-ink/70 mt-2">{font.blurb}</div>
     </button>
   )
 }
@@ -210,7 +275,7 @@ function PaletteCard({ palette, selected, onSelect }) {
         <div className="font-serif font-semibold text-[18px] text-ink">{palette.name}</div>
         <div className="text-[11px] font-mono uppercase tracking-widest text-muted">60 · 30 · 10</div>
       </div>
-      <div className="text-[12.5px] italic text-ink/70 mt-1 mb-3">{palette.blurb}</div>
+      <div className="text-[12.5px] text-ink/70 mt-1 mb-3">{palette.blurb}</div>
       <div className="flex h-12 rounded-xl overflow-hidden border hair">
         {palette.swatches.map((s, i) => (
           <div
@@ -271,8 +336,8 @@ function LivePreview({ headingFont, bodyFont, palette }) {
 
         <div className="px-5 py-8 text-center">
           <div
-            className="text-[36px] leading-[1.05] italic"
-            style={{ fontFamily: `"${headingFont}", serif`, color: text }}
+            className="text-[36px] leading-[1.05]"
+            style={{ fontFamily: `"${headingFont}", serif`, color: text, fontWeight: 600 }}
           >
             Typography,<br />quietly opinionated.
           </div>
@@ -308,7 +373,7 @@ function LivePreview({ headingFont, bodyFont, palette }) {
               <div className="text-[10px] uppercase tracking-widest" style={{ color: subduedOn(mid) }}>
                 Card
               </div>
-              <div className="text-[14px] font-medium mt-1" style={{ fontFamily: `"${headingFont}", serif` }}>
+              <div className="text-[14px] font-semibold mt-1" style={{ fontFamily: `"${headingFont}", serif` }}>
                 Feature {i + 1}
               </div>
               <div className="text-[11px] leading-snug mt-1" style={{ color: subduedOn(mid) }}>

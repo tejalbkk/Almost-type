@@ -46,12 +46,8 @@ export default function TypeSchool({ library, setLibrary }) {
         ...lib,
         liked: dedupeById([card, ...lib.liked])
       }))
-    } else {
-      setLibrary((lib) => ({
-        ...lib,
-        notnow: dedupeById([card, ...lib.notnow])
-      }))
     }
+    // Skipped cards just dismiss — we no longer keep a "not now" pile.
     setQueue((q) => q.slice(1))
     setExpandedId(null)
   }
@@ -63,8 +59,7 @@ export default function TypeSchool({ library, setLibrary }) {
     setQueue((q) => [last.card, ...q])
     setLibrary((lib) => ({
       ...lib,
-      liked: lib.liked.filter((c) => c.id !== last.card.id),
-      notnow: lib.notnow.filter((c) => c.id !== last.card.id)
+      liked: lib.liked.filter((c) => c.id !== last.card.id)
     }))
   }
 

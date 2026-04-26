@@ -1,15 +1,20 @@
 import { useState } from 'react'
+import { Heart, HelpCircle } from 'lucide-react'
 import ShareSheet from './ShareSheet.jsx'
 import NoteSheet from './NoteSheet.jsx'
+import EyeShareSheet from './EyeShareSheet.jsx'
 
-// Liked library + Not Now pile per PRD §4.1, §4.2.4. Notes surface alongside cards.
+// Library — what you saved.
+//   Tab 1 (heart icon, Liked cards): cards you swiped right on in Type School
+//   Tab 2 (Liked Questions): questions you liked in Eye Training
+//
+// We dropped "Not now" — skipped cards are gone forever.
 
 export default function Library({ library, setLibrary }) {
-  const [tab, setTab] = useState('liked')
+  const [tab, setTab] = useState('cards')
   const [shareCard, setShareCard] = useState(null)
   const [noteCard, setNoteCard] = useState(null)
-
-  const list = tab === 'liked' ? library.liked : library.notnow
+  const [shareQuestion, setShareQuestion] = useState(null)
 
   const handleNoteSave = ({ text, visibility }) => {
     if (!noteCard) return
@@ -19,27 +24,17 @@ export default function Library({ library, setLibrary }) {
     }))
   }
 
-  const moveCard = (card) => {
-    if (tab === 'liked') {
-      setLibrary((lib) => ({
-        ...lib,
-        liked: lib.liked.filter((c) => c.id !== card.id),
-        notnow: [card, ...lib.notnow.filter((c) => c.id !== card.id)]
-      }))
-    } else {
-      setLibrary((lib) => ({
-        ...lib,
-        notnow: lib.notnow.filter((c) => c.id !== card.id),
-        liked: [card, ...lib.liked.filter((c) => c.id !== card.id)]
-      }))
-    }
-  }
-
-  const removeCard = (card) => {
+  const deleteCard = (card) => {
     setLibrary((lib) => ({
       ...lib,
-      liked: lib.liked.filter((c) => c.id !== card.id),
-      notnow: lib.notnow.filter((c) => c.id !== card.id)
+      liked: lib.liked.filter((c) => c.id !== card.id)
+    }))
+  }
+
+  const deleteQuestion = (q) => {
+    setLibrary((lib) => ({
+      ...lib,
+      likedQuestions: (lib.likedQuestions || []).filter((x) => x.id !== q.id)
     }))
   }
 
@@ -48,36 +43,55 @@ export default function Library({ library, setLibrary }) {
       <div className="px-5 pt-5">
         <div className="font-serif font-semibold text-[24px] leading-none text-ink">Library</div>
         <div className="text-[13px] text-muted mt-1">
-          The ones that clicked. And the ones that didn’t — yet.
+          The ones that clicked. From swipes and from Eye Training.
         </div>
       </div>
 
       <div className="px-5 mt-4 flex items-center gap-2">
-        <TabChip active={tab === 'liked'} onClick={() => setTab('liked')}>
-          Liked · {library.liked.length}
+        <TabChip active={tab === 'cards'} onClick={() => setTab('cards')}>
+          <Heart
+            size={14}
+            strokeWidth={2.2}
+            fill="#FF5B3A"
+            color="#FF5B3A"
+            className="mr-0"
+          />
+          <span className="text-[13px]">{library.liked.length}</span>
         </TabChip>
-        <TabChip active={tab === 'notnow'} onClick={() => setTab('notnow')}>
-          Not now · {library.notnow.length}
+        <TabChip active={tab === 'questions'} onClick={() => setTab('questions')}>
+          <HelpCircle size={14} strokeWidth={2} />
+          <span>Liked Questions · {(library.likedQuestions || []).length}</span>
         </TabChip>
       </div>
 
       <div className="px-5 mt-4 space-y-3">
-        {list.length === 0 && <EmptyState tab={tab} />}
-        {list.map((card) => (
-          <SavedRow
-            key={card.id}
-            card={card}
-            note={library.notes[card.id]}
-            inLiked={tab === 'liked'}
-            onShare={() => setShareCard(card)}
-            onEditNote={() => setNoteCard(card)}
-            onMove={() => moveCard(card)}
-            onRemove={() => removeCard(card)}
-          />
-        ))}
+        {tab === 'cards' && library.liked.length === 0 && <EmptyCards />}
+        {tab === 'cards' &&
+          library.liked.map((card) => (
+            <SavedCardRow
+              key={card.id}
+              card={card}
+              note={library.notes[card.id]}
+              onShare={() => setShareCard(card)}
+              onEditNote={() => setNoteCard(card)}
+              onDelete={() => deleteCard(card)}
+            />
+          ))}
+
+        {tab === 'questions' && (library.likedQuestions || []).length === 0 && <EmptyQuestions />}
+        {tab === 'questions' &&
+          (library.likedQuestions || []).map((q) => (
+            <SavedQuestionRow
+              key={q.id}
+              question={q}
+              onShare={() => setShareQuestion(q)}
+              onDelete={() => deleteQuestion(q)}
+            />
+          ))}
       </div>
 
       {shareCard && <ShareSheet card={shareCard} onClose={() => setShareCard(null)} />}
+      {shareQuestion && <EyeShareSheet round={shareQuestion} onClose={() => setShareQuestion(null)} />}
       {noteCard && (
         <NoteSheet
           card={noteCard}
@@ -95,7 +109,7 @@ function TabChip({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`px-3.5 py-1.5 rounded-full border text-[13px] font-medium ${
+      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-[13px] font-medium ${
         active ? 'bg-ink text-paper border-ink' : 'hair bg-white text-ink/70 hover:text-ink'
       }`}
     >
@@ -104,22 +118,33 @@ function TabChip({ active, onClick, children }) {
   )
 }
 
-function EmptyState({ tab }) {
+function EmptyCards() {
   return (
     <div className="rounded-2xl border hair bg-white p-6 text-center">
       <div className="font-serif font-semibold text-[18px] leading-snug text-ink">
-        {tab === 'liked' ? 'Nothing here yet.' : 'Nothing skipped — yet.'}
+        Nothing here yet.
       </div>
       <div className="text-[13px] text-muted mt-2">
-        {tab === 'liked'
-          ? 'Swipe right on cards that click. They’ll land here with your notes.'
-          : 'Cards you skip go here. No judgment. Revisit anytime.'}
+        Swipe right on cards in Type School. They'll land here with your notes.
       </div>
     </div>
   )
 }
 
-function SavedRow({ card, note, inLiked, onShare, onEditNote, onMove, onRemove }) {
+function EmptyQuestions() {
+  return (
+    <div className="rounded-2xl border hair bg-white p-6 text-center">
+      <div className="font-serif font-semibold text-[18px] leading-snug text-ink">
+        No saved questions yet.
+      </div>
+      <div className="text-[13px] text-muted mt-2">
+        Tap the heart on a question in Eye Training to keep it for later.
+      </div>
+    </div>
+  )
+}
+
+function SavedCardRow({ card, note, onShare, onEditNote, onDelete }) {
   return (
     <div className="rounded-2xl border hair bg-white p-4">
       <div className="flex items-center justify-between">
@@ -127,9 +152,7 @@ function SavedRow({ card, note, inLiked, onShare, onEditNote, onMove, onRemove }
           <span className="h-1.5 w-1.5 rounded-full bg-almost" />
           {card.tag}
         </span>
-        <span className="text-[11px] text-muted font-mono">
-          {inLiked ? 'Liked' : 'Not now'}
-        </span>
+        <Heart size={14} strokeWidth={2.2} fill="#FF5B3A" color="#FF5B3A" />
       </div>
       <div className="font-serif font-semibold text-[18px] leading-snug text-ink mt-2">{card.title}</div>
       <div className="text-[13px] text-ink/75 mt-1">try: {card.tip}</div>
@@ -142,16 +165,32 @@ function SavedRow({ card, note, inLiked, onShare, onEditNote, onMove, onRemove }
         </div>
       )}
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <SmallBtn onClick={onEditNote}>
-          {note?.text ? 'Edit note' : 'Add note'}
-        </SmallBtn>
+        <SmallBtn onClick={onEditNote}>{note?.text ? 'Edit note' : 'Add note'}</SmallBtn>
         <SmallBtn onClick={onShare}>Share</SmallBtn>
-        <SmallBtn onClick={onMove}>
-          {inLiked ? 'Move to Not now' : 'Move to Liked'}
-        </SmallBtn>
-        <SmallBtn onClick={onRemove} danger>
-          Remove
-        </SmallBtn>
+        <SmallBtn onClick={onDelete} danger>Delete</SmallBtn>
+      </div>
+    </div>
+  )
+}
+
+function SavedQuestionRow({ question, onShare, onDelete }) {
+  return (
+    <div className="rounded-2xl border hair bg-white p-4">
+      <div className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-ink/5 border hair text-[11px] font-medium text-ink/70">
+          <span className="h-1.5 w-1.5 rounded-full bg-almost" />
+          {question.topic}
+        </span>
+        <Heart size={14} strokeWidth={2.2} fill="#FF5B3A" color="#FF5B3A" />
+      </div>
+      <div className="font-serif font-semibold text-[17px] leading-snug text-ink mt-2">{question.prompt}</div>
+      <div className="text-[12.5px] text-ink/70 mt-1">
+        <span className="font-mono uppercase text-[10px] tracking-widest text-muted mr-1.5">Answer · {question.correct}</span>
+        {question.why}
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <SmallBtn onClick={onShare}>Share</SmallBtn>
+        <SmallBtn onClick={onDelete} danger>Delete</SmallBtn>
       </div>
     </div>
   )

@@ -16,8 +16,8 @@ export default {
         serif: ['"Montserrat"', 'system-ui', '-apple-system', 'sans-serif'],
         sans: ['"Inter Tight"', '"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-        // Logo wordmark — Helvetica on Apple devices, Arial elsewhere.
-        logo: ['"Helvetica Neue"', '"Helvetica"', '"Arial"', 'sans-serif']
+        // Logo wordmark — Montserrat (Helvetica isn't free for web embed).
+        logo: ['"Montserrat"', 'system-ui', '-apple-system', 'sans-serif']
       },
       boxShadow: {
         card: '0 10px 30px -8px rgba(14,14,16,0.18), 0 2px 8px -2px rgba(14,14,16,0.08)',

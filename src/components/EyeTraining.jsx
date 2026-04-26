@@ -1,45 +1,67 @@
-import { useMemo, useState } from 'react'
-import { shuffleRounds } from '../data/eyeTraining.js'
+import { useEffect, useState } from 'react'
+import { Heart, Share2 } from 'lucide-react'
+import { eyeRounds, pickNextRound } from '../data/eyeTraining.js'
+import EyeShareSheet from './EyeShareSheet.jsx'
 
-// Eye Training per PRD §4.5. 5 rounds, pick the better one, see why.
+// Eye Training, v2: infinite no-repeat stream of typographic exercises.
+// Mix of visual comparisons and MCQ trivia. Like a question to keep it
+// for later (lands in Library → Liked Questions). Share to send a question
+// to a friend.
 
-export default function EyeTraining() {
-  const [rounds, setRounds] = useState(() => shuffleRounds(5))
-  const [idx, setIdx] = useState(0)
+export default function EyeTraining({ likedQuestions, setLikedQuestions }) {
+  const [seen, setSeen] = useState(() => new Set())
+  const [round, setRound] = useState(() => pickNextRound(new Set()))
   const [choice, setChoice] = useState(null)
   const [score, setScore] = useState(0)
-  const [done, setDone] = useState(false)
+  const [answered, setAnswered] = useState(0)
+  const [shareRound, setShareRound] = useState(null)
 
-  const round = rounds[idx]
+  // When the round changes (we're starting a fresh question), reset the choice
+  useEffect(() => {
+    setChoice(null)
+  }, [round?.id])
+
+  if (!round) return null
+
+  const isCorrect = choice === round.correct
+  const liked = likedQuestions.some((q) => q.id === round.id)
 
   const pick = (label) => {
     if (choice) return
     setChoice(label)
+    setAnswered((n) => n + 1)
     if (label === round.correct) setScore((s) => s + 1)
   }
 
   const next = () => {
-    if (idx + 1 >= rounds.length) {
-      setDone(true)
-      return
+    const ns = new Set(seen)
+    ns.add(round.id)
+    if (ns.size >= eyeRounds.length) {
+      // Exhausted the pool — reset and pick fresh
+      const reset = new Set()
+      setSeen(reset)
+      setRound(pickNextRound(reset))
+    } else {
+      setSeen(ns)
+      setRound(pickNextRound(ns))
     }
-    setIdx((i) => i + 1)
-    setChoice(null)
   }
 
-  const restart = () => {
-    setRounds(shuffleRounds(5))
-    setIdx(0)
-    setChoice(null)
-    setScore(0)
-    setDone(false)
+  const toggleLike = () => {
+    if (liked) {
+      setLikedQuestions((arr) => arr.filter((q) => q.id !== round.id))
+    } else {
+      const saved = {
+        id: round.id,
+        topic: round.topic,
+        prompt: round.prompt,
+        correct: round.correct,
+        why: round.why,
+        savedAt: Date.now()
+      }
+      setLikedQuestions((arr) => [saved, ...arr])
+    }
   }
-
-  if (done) {
-    return <EyeSummary score={score} total={rounds.length} onRestart={restart} />
-  }
-
-  const isCorrect = choice === round.correct
 
   return (
     <div className="flex flex-col h-full overflow-y-auto pb-6">
@@ -47,10 +69,29 @@ export default function EyeTraining() {
         <div>
           <div className="font-serif font-semibold text-[24px] leading-none text-ink">Eye Training</div>
           <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
-            Round {idx + 1} of {rounds.length} · {round.topic}
+            {round.topic} · {answered === 0 ? 'Round one' : `${score}/${answered} so far`}
           </div>
         </div>
-        <div className="text-[13px] font-mono text-ink/70">Score {score}/{rounds.length}</div>
+        <div className="flex items-center gap-1">
+          <RoundIconButton
+            label={liked ? 'Unlike question' : 'Save question for later'}
+            onClick={toggleLike}
+            active={liked}
+          >
+            <Heart
+              size={16}
+              strokeWidth={2}
+              fill={liked ? '#FF5B3A' : 'none'}
+              color={liked ? '#FF5B3A' : 'currentColor'}
+            />
+          </RoundIconButton>
+          <RoundIconButton
+            label="Share question"
+            onClick={() => setShareRound(round)}
+          >
+            <Share2 size={16} strokeWidth={2} />
+          </RoundIconButton>
+        </div>
       </div>
 
       <div className="px-5 mt-4">
@@ -79,8 +120,10 @@ export default function EyeTraining() {
               isCorrect ? 'bg-[#EAF5E8] border-[#C3E0BF]' : 'bg-[#FCE7DE] border-[#F2C1B3]'
             } border`}
           >
-            <div className="text-[11px] font-mono uppercase tracking-widest mb-1"
-                 style={{ color: isCorrect ? '#2E4A28' : '#7A2F16' }}>
+            <div
+              className="text-[11px] font-mono uppercase tracking-widest mb-1"
+              style={{ color: isCorrect ? '#2E4A28' : '#7A2F16' }}
+            >
               {isCorrect ? 'Correct' : 'Not quite'}
             </div>
             <div className="text-[14.5px] leading-snug text-ink/85">{round.why}</div>
@@ -90,17 +133,40 @@ export default function EyeTraining() {
             onClick={next}
             className="mt-4 w-full py-3 rounded-2xl bg-ink text-paper text-[14px] font-medium"
           >
-            {idx + 1 >= rounds.length ? 'See your score' : 'Next round'}
+            Next round
           </button>
         </div>
       )}
+
+      {shareRound && <EyeShareSheet round={shareRound} onClose={() => setShareRound(null)} />}
     </div>
+  )
+}
+
+function RoundIconButton({ children, onClick, label, active }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border hair transition ${
+        active ? 'bg-white text-almost border-almost/30' : 'bg-white text-ink/65 hover:text-ink'
+      }`}
+    >
+      {children}
+    </button>
   )
 }
 
 function OptionCard({ label, render, opt, selected, correct, disabled, onClick }) {
   const statusBorder =
-    correct === true ? 'border-[#7EB17A]' : correct === false && selected ? 'border-[#C56A4F]' : selected ? 'border-ink' : 'hair'
+    correct === true
+      ? 'border-[#7EB17A]'
+      : correct === false && selected
+      ? 'border-[#C56A4F]'
+      : selected
+      ? 'border-ink'
+      : 'hair'
   return (
     <button
       type="button"
@@ -118,7 +184,6 @@ function OptionCard({ label, render, opt, selected, correct, disabled, onClick }
   )
 }
 
-// Renders the different round `render` shapes as described in data/eyeTraining.js
 function RoundPreview({ render, opt }) {
   switch (render.type) {
     case 'paragraph':
@@ -129,20 +194,23 @@ function RoundPreview({ render, opt }) {
       )
     case 'display':
       return (
-        <div
-          style={{ ...opt.style }}
-          className="text-ink py-2"
-        >
+        <div style={{ ...opt.style }} className="text-ink py-2">
           {opt.text}
         </div>
       )
     case 'headline':
       return (
         <div className="py-1">
-          <div style={{ ...opt.titleStyle, fontFamily: '"Fraunces", serif', fontStyle: 'italic' }} className="text-ink">
+          <div
+            style={{ ...opt.titleStyle, fontFamily: '"Fraunces", serif' }}
+            className="text-ink"
+          >
             {opt.title}
           </div>
-          <div style={{ ...opt.subStyle, fontFamily: '"Inter", sans-serif' }} className="text-ink/70">
+          <div
+            style={{ ...opt.subStyle, fontFamily: '"Inter", sans-serif' }}
+            className="text-ink/70"
+          >
             {opt.sub}
           </div>
         </div>
@@ -150,8 +218,13 @@ function RoundPreview({ render, opt }) {
     case 'pairing':
       return (
         <div className="py-1">
-          <div style={{ ...opt.head.style, fontFamily: `"${opt.head.family}", serif` }}>{opt.head.text}</div>
-          <div style={{ ...opt.body.style, fontFamily: `"${opt.body.family}", sans-serif` }} className="mt-1">
+          <div style={{ ...opt.head.style, fontFamily: `"${opt.head.family}", serif` }}>
+            {opt.head.text}
+          </div>
+          <div
+            style={{ ...opt.body.style, fontFamily: `"${opt.body.family}", sans-serif` }}
+            className="mt-1"
+          >
             {opt.body.text}
           </div>
         </div>
@@ -159,11 +232,19 @@ function RoundPreview({ render, opt }) {
     case 'card':
       return (
         <div className="py-1">
-          <div style={{ ...opt.title.style, fontFamily: '"Fraunces", serif', fontStyle: 'italic' }} className="text-ink">
+          <div
+            style={{ ...opt.title.style, fontFamily: '"Fraunces", serif' }}
+            className="text-ink"
+          >
             {opt.title.text}
           </div>
-          <div style={{ ...opt.sub.style, fontFamily: '"Inter", sans-serif' }}>{opt.sub.text}</div>
-          <div style={{ ...opt.cta.style, fontFamily: '"Inter", sans-serif', marginTop: 8 }} className="text-almost">
+          <div style={{ ...opt.sub.style, fontFamily: '"Inter", sans-serif' }}>
+            {opt.sub.text}
+          </div>
+          <div
+            style={{ ...opt.cta.style, fontFamily: '"Inter", sans-serif', marginTop: 8 }}
+            className="text-almost"
+          >
             {opt.cta.text} →
           </div>
         </div>
@@ -187,31 +268,9 @@ function RoundPreview({ render, opt }) {
           ))}
         </div>
       )
+    case 'mcq':
+      return <div className="text-[14.5px] leading-snug text-ink py-1">{opt.text}</div>
     default:
       return null
   }
-}
-
-function EyeSummary({ score, total, onRestart }) {
-  const pct = Math.round((score / total) * 100)
-  const line = pct >= 80
-    ? 'Your eye has receipts. Keep going — this is how taste compounds.'
-    : pct >= 60
-    ? 'Solid. You saw things most people wouldn’t. Now repeat the drill.'
-    : pct >= 40
-    ? 'Mixed. That’s fine. You’re seeing things you didn’t before — stay with it.'
-    : 'Rough round. Good. You’re here because you noticed something was off. That’s the whole skill.'
-  return (
-    <div className="flex flex-col h-full items-center justify-center px-6 text-center">
-      <div className="text-[11px] font-mono uppercase tracking-widest text-muted">Session complete</div>
-      <div className="font-serif font-semibold text-[48px] leading-none text-ink mt-2">{score}/{total}</div>
-      <div className="text-[15px] text-ink/75 mt-3 max-w-[32ch]">{line}</div>
-      <button
-        onClick={onRestart}
-        className="mt-6 px-5 py-3 rounded-full bg-ink text-paper text-[14px] font-medium"
-      >
-        Another round
-      </button>
-    </div>
-  )
 }
