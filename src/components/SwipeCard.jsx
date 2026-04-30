@@ -166,7 +166,7 @@ const SwipeCard = forwardRef(function SwipeCard(
             className="pointer-events-none absolute top-6 right-6 z-10 rotate-[14deg] border-[3px] border-ink px-3 py-1 rounded-md font-mono uppercase tracking-widest text-ink text-sm"
             style={{ opacity: stampSkipOpacity }}
           >
-            not now
+            skipped
           </div>
         </>
       )}
@@ -242,7 +242,7 @@ function IconButton({ children, onClick, label, active }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border hair transition ${
+      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border hair transition ${
         active ? 'bg-ink text-paper border-ink' : 'bg-white text-ink/70 hover:text-ink'
       }`}
     >

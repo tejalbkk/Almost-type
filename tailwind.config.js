@@ -7,8 +7,25 @@ export default {
         ink: '#0E0E10',
         paper: '#FAF7F2',
         almost: '#FF5B3A',
-        muted: '#7B7A78',
-        hair: '#E7E3DC'
+        muted: '#6B6A68',
+        hair: '#E7E3DC',
+        success: {
+          DEFAULT: '#2E4A28',
+          bg: '#EAF5E8',
+          mid: '#7EB17A',
+          soft: '#C3E0BF'
+        },
+        danger: {
+          DEFAULT: '#7A2F16',
+          bg: '#FCE7DE',
+          mid: '#C56A4F',
+          soft: '#F2C1B3'
+        },
+        warning: {
+          DEFAULT: '#7A6E2A',
+          bg: '#FFF8E7',
+          mid: '#F2E2A8'
+        }
       },
       fontFamily: {
         // `display` is the headline font — Montserrat everywhere.

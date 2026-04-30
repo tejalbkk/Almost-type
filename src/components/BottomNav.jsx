@@ -1,4 +1,4 @@
-import { GraduationCap, Type, MessageSquareQuote, Eye, BookMarked } from 'lucide-react'
+import { GraduationCap, Type, ScanEye, Eye, BookMarked } from 'lucide-react'
 
 // Bottom tab bar per PRD §7.1. 44px tap targets, native-feeling patterns.
 // Icons sourced from lucide.dev for visual consistency.
@@ -7,7 +7,7 @@ export default function BottomNav({ tab, onChange }) {
   const items = [
     { id: 'school', label: 'School', Icon: GraduationCap },
     { id: 'finder', label: 'Fonts', Icon: Type },
-    { id: 'critique', label: 'Critique', Icon: MessageSquareQuote },
+    { id: 'critique', label: 'Critique', Icon: ScanEye },
     { id: 'eye', label: 'Eye', Icon: Eye },
     { id: 'library', label: 'Library', Icon: BookMarked }
   ]

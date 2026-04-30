@@ -117,12 +117,13 @@ export default function EyeTraining({ likedQuestions, setLikedQuestions }) {
         <div className="px-5 mt-5 animate-fade-in">
           <div
             className={`rounded-2xl p-5 ${
-              isCorrect ? 'bg-[#EAF5E8] border-[#C3E0BF]' : 'bg-[#FCE7DE] border-[#F2C1B3]'
+              isCorrect ? 'bg-success-bg border-success-soft' : 'bg-danger-bg border-danger-soft'
             } border`}
           >
             <div
-              className="text-[11px] font-mono uppercase tracking-widest mb-1"
-              style={{ color: isCorrect ? '#2E4A28' : '#7A2F16' }}
+              className={`text-[11px] font-mono uppercase tracking-widest mb-1 ${
+                isCorrect ? 'text-success' : 'text-danger'
+              }`}
             >
               {isCorrect ? 'Correct' : 'Not quite'}
             </div>
@@ -149,7 +150,7 @@ function RoundIconButton({ children, onClick, label, active }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-full border hair transition ${
+      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border hair transition ${
         active ? 'bg-white text-almost border-almost/30' : 'bg-white text-ink/65 hover:text-ink'
       }`}
     >
@@ -161,9 +162,9 @@ function RoundIconButton({ children, onClick, label, active }) {
 function OptionCard({ label, render, opt, selected, correct, disabled, onClick }) {
   const statusBorder =
     correct === true
-      ? 'border-[#7EB17A]'
+      ? 'border-success-mid'
       : correct === false && selected
-      ? 'border-[#C56A4F]'
+      ? 'border-danger-mid'
       : selected
       ? 'border-ink'
       : 'hair'

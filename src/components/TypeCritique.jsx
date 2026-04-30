@@ -347,7 +347,7 @@ function RubricItem({ item, answer, onAnswer }) {
   return (
     <div
       className={`rounded-2xl border p-4 bg-white transition ${
-        answer === 'yes' ? 'border-[#7EB17A]' : answer === 'no' ? 'border-[#C56A4F]' : 'hair'
+        answer === 'yes' ? 'border-success-mid' : answer === 'no' ? 'border-danger-mid' : 'hair'
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -387,9 +387,9 @@ function RubricItem({ item, answer, onAnswer }) {
 function Pill({ children, onClick, active, variant }) {
   const styles = active
     ? variant === 'pass'
-      ? 'bg-[#2E4A28] text-white border-[#2E4A28]'
+      ? 'bg-success text-white border-success'
       : variant === 'fail'
-      ? 'bg-[#7A2F16] text-white border-[#7A2F16]'
+      ? 'bg-danger text-white border-danger'
       : 'bg-ink text-paper border-ink'
     : 'hair bg-white text-ink/70 hover:text-ink'
   return (

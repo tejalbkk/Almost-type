@@ -157,8 +157,8 @@ function SavedCardRow({ card, note, onShare, onEditNote, onDelete }) {
       <div className="font-serif font-semibold text-[18px] leading-snug text-ink mt-2">{card.title}</div>
       <div className="text-[13px] text-ink/75 mt-1">try: {card.tip}</div>
       {note?.text && (
-        <div className="mt-3 rounded-xl bg-[#FFF8E7] border border-[#F2E2A8] p-3">
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[#7A6E2A] mb-1">
+        <div className="mt-3 rounded-xl bg-warning-bg border border-warning-mid p-3">
+          <div className="text-[10px] font-mono uppercase tracking-widest text-warning mb-1">
             {note.visibility === 'public' ? 'Public note' : 'Your note'}
           </div>
           <div className="text-[13px] leading-snug text-ink/85">{note.text}</div>
