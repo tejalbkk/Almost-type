@@ -67,7 +67,7 @@ body {
   overscroll-behavior: none;
 }
 
-/* Cormorant: tighten letter-spacing at display sizes */
+/* Apfel Grotezk: keep heading tracking tight at display sizes */
 .font-display,
 .font-serif,
 .font-logo {

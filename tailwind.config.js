@@ -43,7 +43,7 @@ export default {
         mono: ['"Azeret Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        // Display sizes tuned for Cormorant's high contrast
+        // Display sizes — tuned for Apfel Grotezk (Hanken Grotesk fallback)
         'display-xl': ['64px', { lineHeight: '0.95', letterSpacing: '-0.02em' }],
         'display-lg': ['52px', { lineHeight: '1.0',  letterSpacing: '-0.02em' }],
         'display-md': ['40px', { lineHeight: '1.05', letterSpacing: '-0.015em' }],
