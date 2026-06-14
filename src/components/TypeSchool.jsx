@@ -123,12 +123,12 @@ export default function TypeSchool({ library, setLibrary }) {
 
 function Header({ history, onUndo }) {
   return (
-    <div className="px-5 pt-3 pb-2 flex items-center justify-between">
+    <div className="px-5 pt-4 pb-2 flex items-center justify-between">
       <div>
-        <div className="font-display font-semibold text-[22px] leading-none text-ink">
+        <div className="font-display font-medium text-[26px] leading-none text-ink" style={{ letterSpacing: '-0.02em' }}>
           Type School
         </div>
-        <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
+        <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted mt-1.5">
           {history.length === 0 ? 'a fresh stack' : `${history.length} read so far`}
         </div>
       </div>
@@ -136,10 +136,10 @@ function Header({ history, onUndo }) {
         <button
           type="button"
           onClick={onUndo}
-          className="inline-flex items-center gap-1.5 text-[12px] font-medium text-ink/60 hover:text-ink"
+          className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted hover:text-almost transition-colors"
           aria-label="Undo last swipe"
         >
-          <Undo2 size={14} strokeWidth={2} />
+          <Undo2 size={13} strokeWidth={2} />
           Undo
         </button>
       )}
@@ -152,30 +152,31 @@ function TutorialOverlay({ onDismiss }) {
     <button
       type="button"
       onClick={onDismiss}
-      className="absolute inset-0 z-20 rounded-3xl bg-ink/40 backdrop-blur-[2px] flex flex-col items-center justify-center px-6 animate-fade-in cursor-pointer"
+      className="absolute inset-0 z-20 rounded-2xl flex flex-col items-center justify-center px-6 animate-fade-in cursor-pointer"
+      style={{ background: 'rgba(13,10,7,0.88)', backdropFilter: 'blur(4px)' }}
       aria-label="Dismiss tutorial"
     >
-      <div className="text-[11px] font-mono uppercase tracking-widest text-paper/80 mb-4">
+      <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted mb-5">
         how it works
       </div>
-      <div className="font-display font-semibold text-[28px] leading-[1.1] text-paper text-center">
+      <div className="font-display font-medium text-[30px] leading-[1.05] text-ink text-center" style={{ letterSpacing: '-0.02em' }}>
         Swipe right to like.<br />Swipe left to skip.
       </div>
-      <div className="mt-7 flex items-center justify-between w-full max-w-[300px]">
-        <div className="flex items-center gap-2 text-paper">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-paper/10 border border-paper/30">
-            <ArrowLeft size={20} strokeWidth={2.2} />
+      <div className="mt-8 flex items-center justify-between w-full max-w-[280px]">
+        <div className="flex items-center gap-2.5 text-ink/60">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hair">
+            <ArrowLeft size={18} strokeWidth={1.8} />
           </span>
-          <span className="font-mono text-[11px] uppercase tracking-widest">Skip</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em]">Skip</span>
         </div>
-        <div className="flex items-center gap-2 text-paper">
-          <span className="font-mono text-[11px] uppercase tracking-widest">Like</span>
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-almost border border-almost text-paper">
-            <ArrowRight size={20} strokeWidth={2.2} />
+        <div className="flex items-center gap-2.5">
+          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-almost">Like</span>
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-almost text-paper">
+            <ArrowRight size={18} strokeWidth={1.8} />
           </span>
         </div>
       </div>
-      <div className="mt-8 text-[12px] text-paper/70 font-medium">
+      <div className="mt-8 text-[11px] font-mono text-muted uppercase tracking-[0.15em]">
         tap anywhere to start
       </div>
     </button>

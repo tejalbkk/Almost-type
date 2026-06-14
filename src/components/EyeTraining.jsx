@@ -67,8 +67,8 @@ export default function EyeTraining({ likedQuestions, setLikedQuestions }) {
     <div className="flex flex-col h-full overflow-y-auto pb-6">
       <div className="px-5 pt-5 flex items-baseline justify-between">
         <div>
-          <div className="font-serif font-semibold text-[24px] leading-none text-ink">Eye Training</div>
-          <div className="text-[11px] font-mono uppercase tracking-widest text-muted mt-1">
+          <div className="font-display font-medium text-[26px] leading-none text-ink" style={{ letterSpacing: '-0.02em' }}>Eye Training</div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted mt-1.5">
             {round.topic} · {answered === 0 ? 'Round one' : `${score}/${answered} so far`}
           </div>
         </div>
@@ -116,23 +116,23 @@ export default function EyeTraining({ likedQuestions, setLikedQuestions }) {
       {choice && (
         <div className="px-5 mt-5 animate-fade-in">
           <div
-            className={`rounded-2xl p-5 ${
-              isCorrect ? 'bg-success-bg border-success-soft' : 'bg-danger-bg border-danger-soft'
-            } border`}
+            className={`rounded-xl p-4 border ${
+              isCorrect ? 'bg-success-bg border-success' : 'bg-danger-bg border-danger'
+            }`}
           >
             <div
-              className={`text-[11px] font-mono uppercase tracking-widest mb-1 ${
+              className={`text-[10px] font-mono uppercase tracking-[0.18em] mb-1.5 ${
                 isCorrect ? 'text-success' : 'text-danger'
               }`}
             >
               {isCorrect ? 'Correct' : 'Not quite'}
             </div>
-            <div className="text-[14.5px] leading-snug text-ink/85">{round.why}</div>
+            <div className="text-[14px] leading-snug text-ink/85 font-light">{round.why}</div>
           </div>
           <button
             type="button"
             onClick={next}
-            className="mt-4 w-full py-3 rounded-2xl bg-ink text-paper text-[14px] font-medium"
+            className="mt-3 w-full py-3 rounded-xl bg-almost text-paper text-[13px] font-medium hover:bg-almost/90 transition-colors"
           >
             Next round
           </button>
@@ -150,8 +150,8 @@ function RoundIconButton({ children, onClick, label, active }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border hair transition ${
-        active ? 'bg-white text-almost border-almost/30' : 'bg-white text-ink/65 hover:text-ink'
+      className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition ${
+        active ? 'bg-almost/10 text-almost border-almost/30' : 'bg-surface border-hair text-ink/50 hover:text-ink'
       }`}
     >
       {children}
@@ -173,11 +173,11 @@ function OptionCard({ label, render, opt, selected, correct, disabled, onClick }
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`relative text-left rounded-2xl border bg-white p-4 transition ${statusBorder} ${
-        disabled ? 'cursor-default' : 'hover:bg-ink/5'
+      className={`relative text-left rounded-xl border bg-surface p-4 transition ${statusBorder} ${
+        disabled ? 'cursor-default' : 'hover:border-ink/20'
       }`}
     >
-      <div className="text-[11px] font-mono uppercase tracking-widest text-muted mb-2">
+      <div className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted mb-2">
         Option {label}
       </div>
       <RoundPreview render={render} opt={opt} />

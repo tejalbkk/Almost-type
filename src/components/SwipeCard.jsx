@@ -1,18 +1,25 @@
 import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react'
-import { Heart, X, MessageCircle, Share2 } from 'lucide-react'
+import { MessageCircle, Share2 } from 'lucide-react'
 
-// Pointer-events based card drag. Works for mouse and touch.
-// PRD §4.2.3: 70px threshold, stamp opacity scales with distance, 3-card stack.
+// Pointer-events based card drag with spring physics.
 //
-// Gesture arbitration:
-//  - touch-action: pan-y on the outer card lets the browser handle vertical
-//    scroll inside the card (so users can reach Read more + actions on small
-//    screens). We only capture horizontal swipes.
-//  - In pointermove we look at dx vs dy — only lock into swipe mode when
-//    the gesture is dominantly horizontal. Otherwise we let scroll happen.
+// Spec (per design ref):
+//  - Drag the card and it tilts up to 15° in direction of motion
+//  - Release without threshold → spring snap back (~0.3 bounce) via
+//    cubic-bezier(0.34, 1.56, 0.64, 1) — overshoots ~12% then settles
+//  - Release past threshold → quick exit, no bounce
+//
+// Gesture arbitration: touch-action: pan-y on the card lets the browser
+// handle vertical scroll inside the card. We only capture horizontal
+// swipes once dx beats dy past a small dead zone.
 
 const THRESHOLD = 70
 const DIRECTION_LOCK_PX = 6
+const ROTATION_PER_PX = 1 / 9 // 9px of drag = 1° tilt; caps at 15°
+const ROTATION_MAX = 15
+
+const SPRING_TRANSITION = 'transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1)'
+const FLY_TRANSITION = 'transform 320ms cubic-bezier(0.4, 0, 0.2, 1)'
 
 const SwipeCard = forwardRef(function SwipeCard(
   {
@@ -49,10 +56,9 @@ const SwipeCard = forwardRef(function SwipeCard(
     setDx(target)
     window.setTimeout(() => {
       onDecision?.(card.id, direction)
-    }, 280)
+    }, 320)
   }
 
-  // Expose imperative handle so the parent can trigger a programmatic swipe
   useImperativeHandle(
     ref,
     () => ({
@@ -71,8 +77,6 @@ const SwipeCard = forwardRef(function SwipeCard(
       locked: false,
       decided: 'pending'
     }
-    // Don't capture pointer yet — wait until we know direction. This lets
-    // vertical scroll keep working when the user drags up/down.
     setDragging(true)
   }
 
@@ -86,9 +90,7 @@ const SwipeCard = forwardRef(function SwipeCard(
     if (!pointerStart.current.locked) {
       const absX = Math.abs(dxRaw)
       const absY = Math.abs(dyRaw)
-      // Wait until the gesture has clear direction
       if (absX < DIRECTION_LOCK_PX && absY < DIRECTION_LOCK_PX) return
-      // Vertical-dominant gesture: bail out so the inner scroll can take over
       if (absY > absX) {
         pointerStart.current.decided = 'scroll'
         setDragging(false)
@@ -96,7 +98,6 @@ const SwipeCard = forwardRef(function SwipeCard(
       }
       pointerStart.current.locked = true
       pointerStart.current.decided = 'swipe'
-      // Lock the pointer for swipe so the inner scroll doesn't grab it later
       try {
         rootRef.current?.setPointerCapture?.(e.pointerId)
       } catch {
@@ -120,90 +121,138 @@ const SwipeCard = forwardRef(function SwipeCard(
     }
   }
 
-  // Reset flags when the card identity changes
   useEffect(() => {
     decidedRef.current = false
     setDx(0)
   }, [card?.id])
 
-  const rotation = Math.max(-14, Math.min(14, dx / 16))
-  const stampLikeOpacity = Math.min(1, Math.max(0, dx / 100))
-  const stampSkipOpacity = Math.min(1, Math.max(0, -dx / 100))
+  // 15° max tilt, proportional to drag distance
+  const rotation = Math.max(-ROTATION_MAX, Math.min(ROTATION_MAX, dx * ROTATION_PER_PX))
+  const stampLikeOpacity = Math.min(1, Math.max(0, dx / 90))
+  const stampSkipOpacity = Math.min(1, Math.max(0, -dx / 90))
+
+  // Background cards stack: slight scale + vertical offset + subtle tint
+  const bgAlpha = depth > 0 ? Math.max(0, 1 - depth * 0.15) : 1
+
+  // Pick the right release transition based on whether we're flying out or snapping back
+  const releaseTransition = decidedRef.current ? FLY_TRANSITION : SPRING_TRANSITION
 
   const baseStyle = {
-    transform: `translate3d(${dx}px, ${depth * 8}px, 0) rotate(${rotation}deg) scale(${1 - depth * 0.04})`,
-    transition: dragging
-      ? 'none'
-      : 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1)',
+    transform: `translate3d(${dx}px, ${depth * 10}px, 0) rotate(${rotation}deg) scale(${1 - depth * 0.045})`,
+    transition: dragging ? 'none' : releaseTransition,
     zIndex: 30 - depth,
-    opacity: depth > 1 ? 0.6 : 1,
+    opacity: bgAlpha,
     pointerEvents: isFront ? 'auto' : 'none',
     willChange: 'transform'
+  }
+
+  // Liquid glass surface — translucent over the body gradient, with
+  // backdrop-blur for refraction and an inner highlight at the top edge.
+  const glassStyle = {
+    background: 'rgba(36, 30, 23, 0.55)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(28px) saturate(180%)',
+    WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+    boxShadow:
+      '0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.4)'
   }
 
   return (
     <div
       ref={rootRef}
-      className={`swipe-surface absolute inset-0 select-none rounded-3xl bg-paper shadow-card border hair overflow-hidden ${
+      className={`swipe-surface absolute inset-0 select-none rounded-3xl overflow-hidden ${
         isFront ? 'cursor-grab active:cursor-grabbing' : ''
       }`}
-      style={baseStyle}
+      style={{ ...baseStyle, ...glassStyle }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
       aria-hidden={!isFront}
     >
+      {/* Liked stamp */}
       {isFront && (
-        <>
-          <div
-            className="pointer-events-none absolute top-6 left-6 z-10 rotate-[-14deg] border-[3px] border-almost px-3 py-1 rounded-md font-mono uppercase tracking-widest text-almost text-sm"
-            style={{ opacity: stampLikeOpacity }}
-          >
-            liked
-          </div>
-          <div
-            className="pointer-events-none absolute top-6 right-6 z-10 rotate-[14deg] border-[3px] border-ink px-3 py-1 rounded-md font-mono uppercase tracking-widest text-ink text-sm"
-            style={{ opacity: stampSkipOpacity }}
-          >
-            skipped
-          </div>
-        </>
+        <div
+          className="pointer-events-none absolute top-5 left-5 z-10 rotate-[-12deg] px-3 py-1 rounded font-mono uppercase tracking-widest text-almost text-sm font-medium"
+          style={{
+            opacity: stampLikeOpacity,
+            border: '2px solid #FF5B3A',
+            boxShadow: '0 0 16px rgba(255,91,58,0.35)',
+            background: 'rgba(255,91,58,0.06)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)'
+          }}
+        >
+          liked ♥
+        </div>
+      )}
+      {/* Skip stamp */}
+      {isFront && (
+        <div
+          className="pointer-events-none absolute top-5 right-5 z-10 rotate-[12deg] px-3 py-1 rounded font-mono uppercase tracking-widest text-ink/70 text-sm font-medium"
+          style={{
+            opacity: stampSkipOpacity,
+            border: '2px solid rgba(238,229,206,0.4)',
+            background: 'rgba(238,229,206,0.04)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)'
+          }}
+        >
+          not now
+        </div>
       )}
 
       <div className="h-full w-full flex flex-col">
-        <div className="px-6 pt-6 pb-3 flex items-center justify-between shrink-0">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ink/5 border hair text-xs font-medium text-ink/70 tracking-wide">
+        {/* Header — tag + brand label */}
+        <div className="px-5 pt-5 pb-0 flex items-center justify-between shrink-0">
+          <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] text-almost border border-almost/30 bg-almost/[0.08]">
             <span className="h-1.5 w-1.5 rounded-full bg-almost" />
             {card.tag}
           </span>
-          <span className="text-[11px] font-mono text-muted uppercase tracking-widest">
-            almost, type.
+          <span className="text-[10px] font-mono tracking-[0.15em] text-muted/70 uppercase">
+            a, t.
           </span>
         </div>
 
+        {/* Scrollable content body */}
         <div
-          className="flex-1 overflow-y-auto px-6 pb-3 card-scroll"
+          className="flex-1 overflow-y-auto px-5 pt-4 pb-3 card-scroll"
           data-nodrag-vertical
         >
-          <h2 className="font-display font-semibold text-[30px] leading-[1.05] text-ink">
+          {/* Title — editorial hero type */}
+          <h2
+            className="font-display leading-[1.0] text-ink"
+            style={{ fontSize: 'clamp(34px, 9vw, 46px)', fontWeight: 500 }}
+          >
             {card.title}
           </h2>
 
-          <p className="text-[15.5px] leading-[1.55] text-ink/80 mt-3">
+          {/* Body */}
+          <p className="text-[14.5px] leading-[1.6] text-ink/70 mt-4 font-light">
             {card.body}
           </p>
 
-          <div className="rounded-2xl bg-ink text-paper p-4 mt-5">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-paper/60 mb-1">
-              try
+          {/* Try block — orange brand callout */}
+          <div
+            className="rounded-xl mt-5 p-4 relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #FF5B3A 0%, #FF7A55 100%)',
+              boxShadow: '0 8px 24px -6px rgba(255,91,58,0.35), inset 0 1px 0 rgba(255,255,255,0.18)'
+            }}
+          >
+            <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-paper/60 mb-1.5 relative">
+              try this
             </div>
-            <div className="text-[15px] leading-snug">{card.tip}</div>
+            <div className="text-[14.5px] leading-snug text-paper font-medium relative">
+              {card.tip}
+            </div>
           </div>
 
+          {/* Expanded read more */}
           {expanded && card.readMore && (
             <div
-              className="text-[14px] leading-[1.6] text-ink/75 animate-fade-in border-t hair pt-4 mt-5"
+              className="text-[13.5px] leading-[1.65] text-ink/60 animate-fade-in pt-4 mt-4 font-light"
+              style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
               data-nodrag
             >
               {card.readMore}
@@ -211,23 +260,25 @@ const SwipeCard = forwardRef(function SwipeCard(
           )}
         </div>
 
+        {/* Footer */}
         <div
-          className="px-6 pt-3 pb-6 flex items-center justify-between border-t hair shrink-0 bg-paper"
+          className="px-5 pt-3 pb-5 flex items-center justify-between shrink-0"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
           data-nodrag
         >
           <button
             type="button"
             onClick={() => onExpandToggle?.(card.id)}
-            className="text-[13px] font-medium text-ink/70 hover:text-ink underline-offset-4 hover:underline"
+            className="text-[12px] font-medium text-ink/50 hover:text-almost transition-colors"
           >
-            {expanded ? 'Read less' : 'Read more'}
+            {expanded ? '↑ Less' : '↓ Read more'}
           </button>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <IconButton label="Add note" onClick={() => onNote?.(card)} active={hasNote}>
-              <MessageCircle size={18} strokeWidth={2} />
+              <MessageCircle size={16} strokeWidth={2} />
             </IconButton>
             <IconButton label="Share card" onClick={() => onShare?.(card)}>
-              <Share2 size={18} strokeWidth={2} />
+              <Share2 size={16} strokeWidth={2} />
             </IconButton>
           </div>
         </div>
@@ -242,9 +293,21 @@ function IconButton({ children, onClick, label, active }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border hair transition ${
-        active ? 'bg-ink text-paper border-ink' : 'bg-white text-ink/70 hover:text-ink'
+      className={`inline-flex h-10 w-10 items-center justify-center rounded-full transition ${
+        active
+          ? 'bg-almost text-paper shadow-glow'
+          : 'text-ink/55 hover:text-ink'
       }`}
+      style={
+        !active
+          ? {
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)'
+            }
+          : undefined
+      }
     >
       {children}
     </button>

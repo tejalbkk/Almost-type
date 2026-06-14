@@ -26,42 +26,52 @@ export default function NoteSheet({ card, initialNote, onSave, onClose }) {
       role="dialog"
       aria-modal="true"
     >
-      <div className="absolute inset-0 bg-ink/40" />
+      <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.65)' }} />
       <div
-        className="relative w-full max-w-[480px] bg-paper rounded-t-3xl border-t hair shadow-lift safe-bottom animate-slide-up"
+        className="relative w-full max-w-[480px] rounded-t-2xl shadow-lift safe-bottom animate-slide-up"
+        style={{ background: '#181410', borderTop: '1px solid #2A2118' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-center pt-3">
-          <div className="w-10 h-1 rounded-full bg-ink/15" />
+          <div className="w-10 h-1 rounded-full" style={{ background: 'rgba(238,229,206,0.15)' }} />
         </div>
         <div className="px-5 pt-2 pb-5">
-          <div className="text-xs font-mono uppercase tracking-widest text-muted mb-1">Note</div>
-          <div className="font-serif font-semibold text-lg leading-snug text-ink mb-3">{card.title}</div>
+          <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted mb-1">Note</div>
+          <div className="font-display font-medium text-[19px] leading-snug text-ink mb-3" style={{ letterSpacing: '-0.01em' }}>{card.title}</div>
           <textarea
             ref={ref}
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={4}
-            placeholder="What clicked? What’s still fuzzy? Note it here."
-            className="w-full resize-none rounded-2xl border hair bg-white px-4 py-3 text-[15px] leading-snug text-ink outline-none focus:border-ink/40"
+            placeholder="What clicked? What's still fuzzy? Note it here."
+            className="w-full resize-none rounded-xl border border-hair px-4 py-3 text-[14px] leading-snug text-ink outline-none"
+            style={{ background: '#221E17' }}
           />
           <div className="mt-3 flex items-center gap-2">
             <button
               type="button"
               onClick={() => setVisibility('private')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border ${visibility === 'private' ? 'bg-ink text-paper border-ink' : 'hair bg-white text-ink/70 hover:text-ink'}`}
+              className={`px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-[0.1em] border transition-colors ${
+                visibility === 'private'
+                  ? 'bg-almost text-paper border-almost'
+                  : 'border-hair bg-raised text-muted hover:text-ink'
+              }`}
             >
               Private
             </button>
             <button
               type="button"
               onClick={() => setVisibility('public')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium border ${visibility === 'public' ? 'bg-ink text-paper border-ink' : 'hair bg-white text-ink/70 hover:text-ink'}`}
+              className={`px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-[0.1em] border transition-colors ${
+                visibility === 'public'
+                  ? 'bg-almost text-paper border-almost'
+                  : 'border-hair bg-raised text-muted hover:text-ink'
+              }`}
               title="Public notes ship in v1.2"
             >
               Public
             </button>
-            <span className="text-[11px] text-muted ml-auto">
+            <span className="text-[11px] text-muted ml-auto font-light">
               {visibility === 'public' ? 'Public notes go live in v1.2.' : 'Only you see this.'}
             </span>
           </div>
@@ -69,7 +79,8 @@ export default function NoteSheet({ card, initialNote, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 rounded-2xl border hair bg-white text-[14px] font-medium text-ink/70 hover:text-ink"
+              className="flex-1 py-3 rounded-xl border border-hair text-[13px] font-medium text-muted hover:text-ink transition-colors"
+              style={{ background: '#221E17' }}
             >
               Cancel
             </button>
@@ -80,7 +91,7 @@ export default function NoteSheet({ card, initialNote, onSave, onClose }) {
                 onClose?.()
               }}
               disabled={!text.trim()}
-              className="flex-1 py-3 rounded-2xl bg-ink text-paper text-[14px] font-medium disabled:opacity-40"
+              className="flex-1 py-3 rounded-xl bg-almost text-paper text-[13px] font-medium disabled:opacity-40 hover:bg-almost/90 transition-colors"
             >
               Save note
             </button>

@@ -76,41 +76,64 @@ function TopBar({ tab }) {
     library: 'library'
   }
   return (
-    <div className="safe-top px-5 pb-1 flex items-center justify-between">
-      <div className="flex items-baseline gap-1">
-        <span className="font-logo font-semibold text-[18px] text-ink leading-none tracking-tight">almost,</span>
-        <span className="font-logo font-semibold text-[18px] text-almost leading-none tracking-tight">type.</span>
+    <div className="safe-top px-5 pb-2 flex items-center justify-between border-b hair">
+      <div className="flex items-baseline gap-[2px]">
+        <span className="font-logo font-light italic text-[22px] text-ink/90 leading-none">almost,</span>
+        <span className="font-logo font-semibold text-[22px] text-almost leading-none"> type.</span>
       </div>
-      <span className="text-[11px] font-mono uppercase tracking-widest text-muted">{labels[tab]}</span>
+      <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted">{labels[tab]}</span>
     </div>
   )
 }
 
 function Intro({ onDone, onStart }) {
   return (
-    <div className="absolute inset-0 z-40 bg-paper flex flex-col p-6 animate-fade-in">
-      <div className="mt-auto mb-auto">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-muted mb-3">
-          almost, type.
+    <div className="absolute inset-0 z-40 bg-paper flex flex-col animate-fade-in overflow-hidden">
+      {/* Decorative background element */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 70%, rgba(255,91,58,0.07) 0%, transparent 70%)'
+        }}
+      />
+
+      <div className="flex-1 flex flex-col justify-center px-7 pt-16 pb-6 relative z-10">
+        {/* Wordmark — centrepiece of the intro */}
+        <div className="mb-8">
+          <div className="text-[11px] font-mono uppercase tracking-[0.22em] text-muted mb-5">
+            v1.0 · typography
+          </div>
+          <h1 className="font-display font-light italic leading-[0.92]" style={{ fontSize: 'clamp(58px, 18vw, 80px)' }}>
+            <span className="text-ink">almost,</span>
+            <br />
+            <span className="text-almost font-semibold not-italic">type.</span>
+          </h1>
         </div>
-        <h1 className="font-display font-semibold text-[44px] leading-[1.02] text-ink">
-          you're learning.<br />it shows.
-        </h1>
-        <p className="font-display font-semibold text-[22px] text-almost mt-2">that's the point.</p>
-        <p className="text-[15px] leading-snug text-ink/75 mt-5 max-w-[32ch]">
+
+        {/* Divider */}
+        <div className="w-12 h-px bg-almost mb-6" />
+
+        {/* Tagline */}
+        <p className="text-[15px] leading-[1.6] text-ink/65 max-w-[30ch] font-light mb-10">
           Typography, one swipe at a time. No login. No homework. Just the muscle your designer friend built over years — compressed.
         </p>
 
-        <div className="mt-8 space-y-2">
+        {/* CTAs */}
+        <div className="space-y-2.5">
           <IntroBtn primary onClick={() => onStart('school')}>
             Start swiping
           </IntroBtn>
-          <IntroBtn onClick={() => onStart('finder')}>Find fonts for a project</IntroBtn>
-          <IntroBtn onClick={() => onStart('critique')}>Roast my design</IntroBtn>
+          <div className="grid grid-cols-2 gap-2.5">
+            <IntroBtn onClick={() => onStart('finder')}>Find fonts</IntroBtn>
+            <IntroBtn onClick={() => onStart('critique')}>Roast my design</IntroBtn>
+          </div>
         </div>
       </div>
-      <div className="text-[11px] text-muted text-center">
-        No account needed. Works in your browser.
+
+      <div className="pb-8 text-center relative z-10">
+        <p className="text-[11px] font-mono text-muted/60 uppercase tracking-[0.15em]">
+          No account · works in browser
+        </p>
       </div>
     </div>
   )
@@ -121,8 +144,10 @@ function IntroBtn({ children, onClick, primary }) {
     <button
       type="button"
       onClick={onClick}
-      className={`w-full py-3.5 rounded-2xl text-[14px] font-medium ${
-        primary ? 'bg-ink text-paper' : 'border hair bg-white text-ink/80 hover:text-ink'
+      className={`w-full py-3.5 rounded-xl text-[13px] font-medium tracking-wide transition-all ${
+        primary
+          ? 'bg-almost text-paper hover:bg-almost/90 shadow-glow'
+          : 'border hair bg-surface text-ink/70 hover:text-ink hover:border-ink/20'
       }`}
     >
       {children}

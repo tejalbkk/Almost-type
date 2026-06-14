@@ -83,22 +83,22 @@ export default function FontFinder() {
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <div className="px-5 pt-5">
-        <div className="font-serif font-semibold text-[24px] leading-none text-ink">Font Finder</div>
-        <div className="text-[13px] text-muted mt-1">
+        <div className="font-display font-medium text-[26px] leading-none text-ink" style={{ letterSpacing: '-0.02em' }}>Font Finder</div>
+        <div className="text-[13px] text-muted mt-1.5 font-light">
           Describe the vibe. Get fonts, palettes, and a mock you can read.
         </div>
 
         <form onSubmit={onSubmit} className="mt-4">
-          <div className="flex items-center gap-2 rounded-2xl border hair bg-white p-2">
+          <div className="flex items-center gap-2 rounded-xl border hair bg-surface p-1.5">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder='e.g. "dark moody luxury fashion"'
-              className="flex-1 bg-transparent px-3 py-2 text-[15px] outline-none placeholder:text-muted"
+              className="flex-1 bg-transparent px-3 py-2 text-[14px] outline-none placeholder:text-muted/60 text-ink"
             />
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-ink text-paper text-[13px] font-medium disabled:opacity-40"
+              className="px-4 py-2 rounded-lg bg-almost text-paper text-[12px] font-medium disabled:opacity-40 hover:bg-almost/90 transition-colors"
               disabled={loading || !query.trim()}
             >
               {loading ? 'Looking…' : 'Find fonts'}
@@ -114,7 +114,7 @@ export default function FontFinder() {
                 setQuery(q)
                 generate(q)
               }}
-              className="text-[12px] font-medium px-3 py-1.5 rounded-full border hair bg-white text-ink/75 hover:text-ink hover:bg-ink/5"
+              className="text-[11px] font-mono uppercase tracking-[0.1em] px-3 py-1.5 rounded-full border hair bg-surface text-muted hover:text-ink hover:border-ink/20 transition-colors"
             >
               {q}
             </button>
@@ -174,9 +174,9 @@ export default function FontFinder() {
           <button
             type="button"
             onClick={tryDifferentVibe}
-            className="w-full py-3.5 rounded-2xl border hair bg-white text-ink/80 hover:text-ink text-[14px] font-medium inline-flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl border border-hair bg-surface text-ink/70 hover:text-ink text-[13px] font-medium inline-flex items-center justify-center gap-2 hover:border-ink/20 transition-colors"
           >
-            <Shuffle size={16} strokeWidth={2} />
+            <Shuffle size={15} strokeWidth={2} />
             Surprise me — try a different vibe
           </button>
         </div>
@@ -213,12 +213,12 @@ function SectionHeader({ label, onRefresh, refreshLabel }) {
 function Empty() {
   return (
     <div className="px-5 mt-6">
-      <div className="rounded-2xl border hair bg-white p-5">
-        <div className="font-serif font-semibold text-[18px] text-ink leading-snug">
-          Tell us a vibe. We’ll give you four fonts, four palettes, and a mock you can almost ship.
+      <div className="rounded-xl border hair bg-surface p-5">
+        <div className="font-display font-medium text-[20px] text-ink leading-snug" style={{ letterSpacing: '-0.01em' }}>
+          Tell us a vibe. We'll give you four fonts, four palettes, and a mock you can almost ship.
         </div>
-        <div className="text-[13px] text-muted mt-2">
-          Try: “playful learning app”, “art gallery”, or “creative agency.”
+        <div className="text-[13px] text-muted mt-2 font-light">
+          Try: "playful learning app", "art gallery", or "creative agency."
         </div>
       </div>
     </div>
@@ -230,31 +230,31 @@ function FontCard({ font, selected, onSelect }) {
     <button
       type="button"
       onClick={onSelect}
-      className={`w-full text-left rounded-2xl border p-4 transition ${
-        selected ? 'border-ink bg-white shadow-card' : 'hair bg-white hover:bg-ink/5'
+      className={`w-full text-left rounded-xl border p-4 transition-all ${
+        selected ? 'border-almost bg-surface shadow-glow' : 'border-hair bg-surface hover:border-ink/20'
       }`}
     >
       <div className="flex items-center justify-between">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-muted">{font.role}</div>
-        <div className="text-[11px] font-mono text-muted">{font.style}</div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted">{font.role}</div>
+        <div className="text-[10px] font-mono text-muted/60">{font.style}</div>
       </div>
       <div
-        className="text-[34px] leading-none text-ink mt-2"
+        className="text-[32px] leading-none text-ink mt-2"
         style={{ fontFamily: `"${font.family}", serif` }}
       >
         {font.sample}
       </div>
       <div
-        className="text-[14px] leading-snug text-ink/75 mt-2"
+        className="text-[13px] leading-snug text-ink/60 mt-2"
         style={{ fontFamily: `"${font.family}", serif` }}
       >
         {font.body}
       </div>
       <div className="mt-3 flex items-center gap-2 flex-wrap">
-        <span className="text-[11px] px-2 py-0.5 rounded-full bg-ink/5 border hair text-ink/70 font-medium">
+        <span className="text-[10px] px-2 py-0.5 rounded-full border border-hair text-muted font-mono">
           {font.family}
         </span>
-        <span className="text-[11px] px-2 py-0.5 rounded-full bg-ink/5 border hair text-ink/70 font-medium">
+        <span className="text-[10px] px-2 py-0.5 rounded-full border border-hair text-muted font-mono">
           {font.tag}
         </span>
       </div>
@@ -267,16 +267,16 @@ function PaletteCard({ palette, selected, onSelect }) {
     <button
       type="button"
       onClick={onSelect}
-      className={`w-full text-left rounded-2xl border p-4 transition ${
-        selected ? 'border-ink bg-white shadow-card' : 'hair bg-white hover:bg-ink/5'
+      className={`w-full text-left rounded-xl border p-4 transition-all ${
+        selected ? 'border-almost bg-surface shadow-glow' : 'border-hair bg-surface hover:border-ink/20'
       }`}
     >
       <div className="flex items-baseline justify-between">
-        <div className="font-serif font-semibold text-[18px] text-ink">{palette.name}</div>
-        <div className="text-[11px] font-mono uppercase tracking-widest text-muted">60 · 30 · 10</div>
+        <div className="font-display font-medium text-[19px] text-ink" style={{ letterSpacing: '-0.01em' }}>{palette.name}</div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted">60 · 30 · 10</div>
       </div>
-      <div className="text-[12.5px] text-ink/70 mt-1 mb-3">{palette.blurb}</div>
-      <div className="flex h-12 rounded-xl overflow-hidden border hair">
+      <div className="text-[12px] text-muted mt-1 mb-3 font-light">{palette.blurb}</div>
+      <div className="flex h-10 rounded-lg overflow-hidden border border-hair">
         {palette.swatches.map((s, i) => (
           <div
             key={s.hex + i}
@@ -290,10 +290,10 @@ function PaletteCard({ palette, selected, onSelect }) {
         {palette.swatches.map((s) => (
           <div key={s.hex}>
             <div className="flex items-center gap-2">
-              <span className="inline-block h-3 w-3 rounded-sm border hair" style={{ background: s.hex }} />
-              <span className="font-mono text-ink/70">{s.hex.toUpperCase()}</span>
+              <span className="inline-block h-3 w-3 rounded-sm border border-hair" style={{ background: s.hex }} />
+              <span className="font-mono text-ink/60">{s.hex.toUpperCase()}</span>
             </div>
-            <div className="text-ink/60 mt-0.5">{s.role}</div>
+            <div className="text-muted mt-0.5 text-[10px]">{s.role}</div>
           </div>
         ))}
       </div>
@@ -345,7 +345,7 @@ function LivePreview({ headingFont, bodyFont, palette }) {
             className="text-[14px] leading-snug mt-3 max-w-[36ch] mx-auto"
             style={{ color: sub, fontFamily: `"${bodyFont}", sans-serif` }}
           >
-            A short description that would live on your homepage. Readable at a glance. Doesn’t ask for much.
+            A short description that would live on your homepage. Readable at a glance. Doesn't ask for much.
           </div>
           <div className="mt-4 flex items-center justify-center gap-2">
             <span

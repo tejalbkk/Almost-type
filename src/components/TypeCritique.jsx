@@ -146,8 +146,8 @@ export default function TypeCritique() {
   return (
     <div className="flex flex-col h-full overflow-y-auto pb-8">
       <div className="px-5 pt-5">
-        <div className="font-serif font-semibold text-[24px] leading-none text-ink">Type Critique</div>
-        <div className="text-[13px] text-muted mt-1">
+        <div className="font-display font-medium text-[26px] leading-none text-ink" style={{ letterSpacing: '-0.02em' }}>Type Critique</div>
+        <div className="text-[13px] text-muted mt-1.5 font-light">
           Drop a screenshot. Run the rubric. We won't lie to protect your feelings.
         </div>
       </div>
@@ -161,28 +161,29 @@ export default function TypeCritique() {
             setDragActive={setDragActive}
           />
         ) : (
-          <div className="rounded-2xl border hair bg-white overflow-hidden">
-            <div className="relative bg-[#0E0E10]/5">
+          <div className="rounded-xl border border-hair bg-surface overflow-hidden">
+            <div className="relative">
               <img
                 src={imageUrl}
                 alt="Your design"
-                className="w-full max-h-[420px] object-contain bg-white"
+                className="w-full max-h-[420px] object-contain"
+                style={{ background: '#181410' }}
               />
               <button
                 type="button"
                 onClick={clearImage}
                 aria-label="Remove image"
-                className="absolute top-2 right-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink/80 text-paper hover:bg-ink"
+                className="absolute top-2 right-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-paper/80 text-ink hover:bg-paper"
               >
                 <X size={16} strokeWidth={2.4} />
               </button>
             </div>
-            <div className="px-4 py-3 flex items-center justify-between">
-              <div className="text-[12px] text-muted truncate">{imageName}</div>
+            <div className="px-4 py-3 flex items-center justify-between border-t border-hair">
+              <div className="text-[12px] text-muted font-mono truncate">{imageName}</div>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="text-[12px] font-medium text-ink/70 hover:text-ink"
+                className="text-[11px] font-mono uppercase tracking-[0.12em] text-muted hover:text-almost transition-colors"
               >
                 Replace
               </button>
@@ -203,20 +204,20 @@ export default function TypeCritique() {
           <button
             type="button"
             onClick={() => setRubricOpen(true)}
-            className="w-full py-3.5 rounded-2xl bg-ink text-paper text-[14px] font-medium"
+            className="w-full py-3.5 rounded-xl bg-almost text-paper text-[13px] font-medium hover:bg-almost/90 transition-colors"
           >
             Run the typography rubric
           </button>
           <button
             type="button"
             onClick={askClaude}
-            className="w-full py-3.5 rounded-2xl border hair bg-white text-ink text-[14px] font-medium inline-flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-xl border border-hair bg-surface text-ink/80 text-[13px] font-medium inline-flex items-center justify-center gap-2 hover:border-ink/20 hover:text-ink transition-colors"
           >
-            <Sparkles size={15} strokeWidth={2} />
+            <Sparkles size={14} strokeWidth={2} />
             Get a deep critique from Claude
-            <ExternalLink size={13} strokeWidth={2} />
+            <ExternalLink size={12} strokeWidth={2} />
           </button>
-          <div className="text-[11px] text-muted text-center pt-1">
+          <div className="text-[10px] font-mono text-muted/70 text-center pt-1 uppercase tracking-[0.1em]">
             Both work. The rubric is faster. Claude is deeper.
           </div>
         </div>
@@ -253,22 +254,22 @@ function UploadZone({ onPick, onDrop, dragActive, setDragActive }) {
       }}
       onDragLeave={() => setDragActive(false)}
       onDrop={onDrop}
-      className={`w-full rounded-3xl border-2 border-dashed p-8 text-center transition ${
-        dragActive ? 'border-almost bg-almost/5' : 'border-ink/15 bg-white hover:bg-ink/5'
+      className={`w-full rounded-xl border-2 border-dashed p-8 text-center transition ${
+        dragActive ? 'border-almost bg-almost/5' : 'border-hair bg-surface hover:border-ink/20'
       }`}
     >
-      <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-ink text-paper mb-3">
-        <ImagePlus size={22} strokeWidth={2} />
+      <div className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-raised text-ink/60 mb-3 border border-hair">
+        <ImagePlus size={20} strokeWidth={1.8} />
       </div>
-      <div className="font-serif font-semibold text-[20px] text-ink">
+      <div className="font-display font-medium text-[21px] text-ink" style={{ letterSpacing: '-0.01em' }}>
         Drop your design here
       </div>
-      <div className="text-[13px] text-muted mt-1">
+      <div className="text-[13px] text-muted mt-1 font-light">
         Or tap to choose a screenshot from your device
       </div>
-      <div className="text-[11px] text-muted mt-3 inline-flex items-center gap-1.5">
-        <Upload size={12} strokeWidth={2} />
-        PNG, JPG, WebP — anything an image
+      <div className="text-[10px] font-mono text-muted/60 mt-3 inline-flex items-center gap-1.5 uppercase tracking-[0.1em]">
+        <Upload size={11} strokeWidth={2} />
+        PNG, JPG, WebP
       </div>
     </button>
   )
@@ -301,25 +302,25 @@ function Rubric({ answers, setAnswer, answered, passed, failedItems, onAskClaude
       </div>
 
       {allAnswered && (
-        <div className="rounded-2xl bg-ink text-paper p-5 animate-fade-in">
-          <div className="text-[10px] font-mono uppercase tracking-widest text-paper/60 mb-2">
+        <div className="rounded-xl p-5 animate-fade-in" style={{ background: '#FF5B3A' }}>
+          <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-paper/60 mb-2">
             Your read
           </div>
           {failedItems.length === 0 ? (
-            <div className="text-[15.5px] leading-snug">
+            <div className="text-[15px] leading-snug text-paper font-medium">
               Eight passes. The bones of your typography are honest. Now it's polish, not repair — kerning, optical adjustments, the boring final 10%.
             </div>
           ) : (
             <div>
-              <div className="text-[15.5px] leading-snug mb-3">
+              <div className="text-[15px] leading-snug text-paper font-medium mb-3">
                 {failedItems.length === 1
                   ? 'One thing to fix. Worth doing now — it will lift everything else.'
                   : `${failedItems.length} fixes to make. Don't try them all at once — go in order, top to bottom.`}
               </div>
-              <ul className="space-y-2 text-[14px] leading-snug text-paper/85">
+              <ul className="space-y-2 text-[13.5px] leading-snug text-paper/85">
                 {failedItems.map((f) => (
                   <li key={f.id} className="flex gap-2">
-                    <span className="text-almost shrink-0">→</span>
+                    <span className="text-paper shrink-0">→</span>
                     <span>{f.fix}</span>
                   </li>
                 ))}
@@ -332,11 +333,11 @@ function Rubric({ answers, setAnswer, answered, passed, failedItems, onAskClaude
       <button
         type="button"
         onClick={onAskClaude}
-        className="w-full py-3.5 rounded-2xl border hair bg-white text-ink text-[14px] font-medium inline-flex items-center justify-center gap-2"
+        className="w-full py-3.5 rounded-xl border border-hair bg-surface text-ink/80 text-[13px] font-medium inline-flex items-center justify-center gap-2 hover:border-ink/20 hover:text-ink transition-colors"
       >
-        <Sparkles size={15} strokeWidth={2} />
+        <Sparkles size={14} strokeWidth={2} />
         Want a deeper read? Ask Claude
-        <ExternalLink size={13} strokeWidth={2} />
+        <ExternalLink size={12} strokeWidth={2} />
       </button>
     </div>
   )
@@ -346,14 +347,16 @@ function RubricItem({ item, answer, onAnswer }) {
   const [revealed, setRevealed] = useState(false)
   return (
     <div
-      className={`rounded-2xl border p-4 bg-white transition ${
-        answer === 'yes' ? 'border-success-mid' : answer === 'no' ? 'border-danger-mid' : 'hair'
+      className={`rounded-xl border p-4 transition-colors ${
+        answer === 'yes'
+          ? 'border-success bg-success-bg'
+          : answer === 'no'
+          ? 'border-danger bg-danger-bg'
+          : 'border-hair bg-surface'
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="text-[14.5px] leading-snug text-ink flex-1 font-medium">{item.q}</div>
-      </div>
-      <div className="text-[12.5px] text-ink/65 leading-snug mt-1.5">{item.why}</div>
+      <div className="text-[14px] leading-snug text-ink flex-1 font-medium">{item.q}</div>
+      <div className="text-[12px] text-muted leading-snug mt-1.5 font-light">{item.why}</div>
 
       <div className="mt-3 flex items-center gap-2">
         <Pill onClick={() => onAnswer('yes')} active={answer === 'yes'} variant="pass">
@@ -368,15 +371,15 @@ function RubricItem({ item, answer, onAnswer }) {
         <button
           type="button"
           onClick={() => setRevealed((v) => !v)}
-          className="ml-auto text-[12px] font-medium text-ink/60 hover:text-ink"
+          className="ml-auto text-[11px] font-mono uppercase tracking-[0.1em] text-muted hover:text-almost transition-colors"
         >
           {revealed ? 'Hide fix' : 'Show fix'}
         </button>
       </div>
 
       {revealed && (
-        <div className="mt-3 rounded-xl bg-ink/5 px-3 py-2 text-[13px] leading-snug text-ink/80">
-          <span className="font-mono uppercase text-[10px] tracking-widest text-muted mr-2">Fix</span>
+        <div className="mt-3 rounded-lg border border-hair px-3 py-2.5 text-[12.5px] leading-snug text-ink/75" style={{ background: '#221E17' }}>
+          <span className="font-mono uppercase text-[9px] tracking-[0.18em] text-muted mr-2">Fix</span>
           {item.fix}
         </div>
       )}
@@ -387,16 +390,16 @@ function RubricItem({ item, answer, onAnswer }) {
 function Pill({ children, onClick, active, variant }) {
   const styles = active
     ? variant === 'pass'
-      ? 'bg-success text-white border-success'
+      ? 'bg-success text-paper border-success'
       : variant === 'fail'
-      ? 'bg-danger text-white border-danger'
+      ? 'bg-danger text-paper border-danger'
       : 'bg-ink text-paper border-ink'
-    : 'hair bg-white text-ink/70 hover:text-ink'
+    : 'border-hair bg-raised text-muted hover:text-ink'
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full text-[12px] font-medium border ${styles}`}
+      className={`px-3 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-[0.08em] border transition-colors ${styles}`}
     >
       {children}
     </button>
@@ -406,7 +409,7 @@ function Pill({ children, onClick, active, variant }) {
 function QuickTools() {
   return (
     <div className="px-5 mt-6">
-      <div className="text-[11px] font-mono uppercase tracking-widest text-muted mb-2">
+      <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted mb-2">
         Quick tools
       </div>
       <div className="grid grid-cols-1 gap-2">
@@ -416,13 +419,13 @@ function QuickTools() {
             href={t.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-2xl border hair bg-white p-3 hover:bg-ink/5 inline-flex items-center justify-between gap-2"
+            className="rounded-xl border border-hair bg-surface p-3 hover:border-ink/20 inline-flex items-center justify-between gap-2 transition-colors"
           >
             <div className="min-w-0">
-              <div className="text-[14px] font-medium text-ink truncate">{t.name}</div>
-              <div className="text-[12px] text-muted truncate">{t.desc}</div>
+              <div className="text-[13.5px] font-medium text-ink truncate">{t.name}</div>
+              <div className="text-[12px] text-muted truncate font-light">{t.desc}</div>
             </div>
-            <ExternalLink size={14} strokeWidth={2} className="text-ink/50 shrink-0" />
+            <ExternalLink size={13} strokeWidth={1.8} className="text-muted shrink-0" />
           </a>
         ))}
       </div>
