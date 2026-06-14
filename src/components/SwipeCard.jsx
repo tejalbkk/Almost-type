@@ -146,15 +146,13 @@ const SwipeCard = forwardRef(function SwipeCard(
     willChange: 'transform'
   }
 
-  // Liquid glass surface — translucent over the body gradient, with
-  // backdrop-blur for refraction and an inner highlight at the top edge.
-  const glassStyle = {
-    background: 'rgba(36, 30, 23, 0.55)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    backdropFilter: 'blur(28px) saturate(180%)',
-    WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+  // Card surface — vertical linear gradient from deep blue-black to burnt
+  // orange, with a subtle warm outer glow that picks up the body gradient.
+  const cardStyle = {
+    background: 'linear-gradient(180deg, #010013 0%, #551E01 100%)',
+    border: '1px solid rgba(255, 91, 58, 0.12)',
     boxShadow:
-      '0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.4)'
+      '0 24px 60px -16px rgba(85, 30, 1, 0.55), 0 8px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)'
   }
 
   return (
@@ -163,7 +161,7 @@ const SwipeCard = forwardRef(function SwipeCard(
       className={`swipe-surface absolute inset-0 select-none rounded-3xl overflow-hidden ${
         isFront ? 'cursor-grab active:cursor-grabbing' : ''
       }`}
-      style={{ ...baseStyle, ...glassStyle }}
+      style={{ ...baseStyle, ...cardStyle }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerEnd}
@@ -205,11 +203,14 @@ const SwipeCard = forwardRef(function SwipeCard(
       <div className="h-full w-full flex flex-col">
         {/* Header — tag + brand label */}
         <div className="px-5 pt-5 pb-0 flex items-center justify-between shrink-0">
-          <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] text-almost border border-almost/30 bg-almost/[0.08]">
+          <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-[0.15em] text-almost border border-almost/40 bg-almost/[0.08]">
             <span className="h-1.5 w-1.5 rounded-full bg-almost" />
             {card.tag}
           </span>
-          <span className="text-[10px] font-mono tracking-[0.15em] text-muted/70 uppercase">
+          <span
+            className="text-[10px] font-mono tracking-[0.15em] uppercase"
+            style={{ color: 'rgba(206,206,206,0.5)' }}
+          >
             a, t.
           </span>
         </div>
@@ -219,31 +220,44 @@ const SwipeCard = forwardRef(function SwipeCard(
           className="flex-1 overflow-y-auto px-5 pt-4 pb-3 card-scroll"
           data-nodrag-vertical
         >
-          {/* Title — editorial hero type */}
+          {/* Title — editorial hero type, set in #cecece */}
           <h2
-            className="font-display leading-[1.0] text-ink"
-            style={{ fontSize: 'clamp(34px, 9vw, 46px)', fontWeight: 500 }}
+            className="font-display leading-[1.0]"
+            style={{
+              fontSize: 'clamp(34px, 9vw, 46px)',
+              fontWeight: 500,
+              color: '#cecece'
+            }}
           >
             {card.title}
           </h2>
 
           {/* Body */}
-          <p className="text-[14.5px] leading-[1.6] text-ink/70 mt-4 font-light">
+          <p
+            className="text-[14.5px] leading-[1.6] mt-4 font-light"
+            style={{ color: 'rgba(206,206,206,0.78)' }}
+          >
             {card.body}
           </p>
 
-          {/* Try block — orange brand callout */}
+          {/* Try block — flat orange callout, no outer glow */}
           <div
             className="rounded-xl mt-5 p-4 relative overflow-hidden"
             style={{
               background: 'linear-gradient(135deg, #FF5B3A 0%, #FF7A55 100%)',
-              boxShadow: '0 8px 24px -6px rgba(255,91,58,0.35), inset 0 1px 0 rgba(255,255,255,0.18)'
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)'
             }}
           >
-            <div className="text-[9px] font-mono uppercase tracking-[0.2em] text-paper/60 mb-1.5 relative">
+            <div
+              className="text-[9px] font-mono uppercase tracking-[0.2em] mb-1.5 relative"
+              style={{ color: 'rgba(206,206,206,0.7)' }}
+            >
               try this
             </div>
-            <div className="text-[14.5px] leading-snug text-paper font-medium relative">
+            <div
+              className="text-[14.5px] leading-snug font-medium relative"
+              style={{ color: '#cecece' }}
+            >
               {card.tip}
             </div>
           </div>
@@ -251,8 +265,11 @@ const SwipeCard = forwardRef(function SwipeCard(
           {/* Expanded read more */}
           {expanded && card.readMore && (
             <div
-              className="text-[13.5px] leading-[1.65] text-ink/60 animate-fade-in pt-4 mt-4 font-light"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
+              className="text-[13.5px] leading-[1.65] animate-fade-in pt-4 mt-4 font-light"
+              style={{
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+                color: 'rgba(206,206,206,0.6)'
+              }}
               data-nodrag
             >
               {card.readMore}
@@ -269,7 +286,8 @@ const SwipeCard = forwardRef(function SwipeCard(
           <button
             type="button"
             onClick={() => onExpandToggle?.(card.id)}
-            className="text-[12px] font-medium text-ink/50 hover:text-almost transition-colors"
+            className="text-[12px] font-medium hover:text-almost transition-colors"
+            style={{ color: 'rgba(206,206,206,0.55)' }}
           >
             {expanded ? '↑ Less' : '↓ Read more'}
           </button>
