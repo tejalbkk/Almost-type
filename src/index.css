@@ -10,6 +10,10 @@ html,
 body,
 #root {
   height: 100%;
+  /* Lock horizontal scroll — fly-out cards must not widen the document */
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 html {
