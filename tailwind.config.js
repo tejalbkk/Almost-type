@@ -33,12 +33,12 @@ export default {
         }
       },
       fontFamily: {
-        // Cormorant — high-contrast editorial serif for display/headlines/logo
-        display: ['"Cormorant"', 'Georgia', 'serif'],
-        serif:   ['"Cormorant"', 'Georgia', 'serif'],
-        logo:    ['"Cormorant"', 'Georgia', 'serif'],
-        // Hanken Grotesk — clean modern grotesque for body
-        sans: ['"Hanken Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
+        // Apfel Grotezk — everywhere. Hanken Grotesk is the fallback
+        // while the font files are loading (or if they're missing).
+        display: ['"Apfel Grotezk"', '"Hanken Grotesk"', 'system-ui', 'sans-serif'],
+        serif:   ['"Apfel Grotezk"', '"Hanken Grotesk"', 'system-ui', 'sans-serif'],
+        logo:    ['"Apfel Grotezk"', '"Hanken Grotesk"', 'system-ui', 'sans-serif'],
+        sans:    ['"Apfel Grotezk"', '"Hanken Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
         // Azeret Mono — technical monospacer for labels & codes
         mono: ['"Azeret Mono"', 'ui-monospace', 'monospace'],
       },

@@ -2,6 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ──────────────────────────────────────────────────────────────
+   Apfel Grotezk by Collletttivo (free, SIL Open Font License).
+   Download .woff2 files from https://collletttivo.it/typefaces/apfel-grotezk
+   and put them in /public/fonts/. Until then, Hanken Grotesk falls in.
+   ────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('/fonts/ApfelGrotezk-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('/fonts/ApfelGrotezk-Mittel.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('/fonts/ApfelGrotezk-Fett.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('/fonts/ApfelGrotezk-Schrift.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
 }
@@ -22,7 +56,7 @@ html {
 }
 
 body {
-  font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+  font-family: 'Apfel Grotezk', 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 91, 58, 0.12), transparent 60%),
     radial-gradient(ellipse 60% 50% at 100% 110%, rgba(238, 229, 206, 0.05), transparent 60%),

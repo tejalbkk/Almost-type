@@ -240,12 +240,12 @@ const SwipeCard = forwardRef(function SwipeCard(
             {card.body}
           </p>
 
-          {/* Try block — flat orange callout, no outer glow */}
+          {/* Try block — deep burnt-orange callout, flat */}
           <div
             className="rounded-xl mt-5 p-4 relative overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, #FF5B3A 0%, #FF7A55 100%)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12)'
+              background: '#8E2B03',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
             }}
           >
             <div
