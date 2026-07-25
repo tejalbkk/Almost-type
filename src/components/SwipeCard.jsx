@@ -90,12 +90,9 @@ const SwipeCard = forwardRef(function SwipeCard(
     if (!pointerStart.current.locked) {
       const absX = Math.abs(dxRaw)
       const absY = Math.abs(dyRaw)
+      // Wait for a small dead-zone before committing to the swipe
       if (absX < DIRECTION_LOCK_PX && absY < DIRECTION_LOCK_PX) return
-      if (absY > absX) {
-        pointerStart.current.decided = 'scroll'
-        setDragging(false)
-        return
-      }
+      // No inner scroll to defer to — always lock into swipe
       pointerStart.current.locked = true
       pointerStart.current.decided = 'swipe'
       try {
@@ -215,11 +212,8 @@ const SwipeCard = forwardRef(function SwipeCard(
           </span>
         </div>
 
-        {/* Scrollable content body */}
-        <div
-          className="flex-1 overflow-y-auto px-5 pt-4 pb-3 card-scroll"
-          data-nodrag-vertical
-        >
+        {/* Content body — no scroll; cards curate to fit */}
+        <div className="flex-1 overflow-hidden px-5 pt-4 pb-3">
           {/* Title — editorial hero type, set in #cecece */}
           <h2
             className="font-display leading-[1.0]"
@@ -262,35 +256,14 @@ const SwipeCard = forwardRef(function SwipeCard(
             </div>
           </div>
 
-          {/* Expanded read more */}
-          {expanded && card.readMore && (
-            <div
-              className="text-[13.5px] leading-[1.65] animate-fade-in pt-4 mt-4 font-light"
-              style={{
-                borderTop: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(206,206,206,0.6)'
-              }}
-              data-nodrag
-            >
-              {card.readMore}
-            </div>
-          )}
         </div>
 
-        {/* Footer */}
+        {/* Footer — action buttons only, no Read More toggle */}
         <div
-          className="px-5 pt-3 pb-5 flex items-center justify-between shrink-0"
+          className="px-5 pt-3 pb-5 flex items-center justify-end shrink-0"
           style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
           data-nodrag
         >
-          <button
-            type="button"
-            onClick={() => onExpandToggle?.(card.id)}
-            className="text-[12px] font-medium hover:text-almost transition-colors"
-            style={{ color: 'rgba(206,206,206,0.55)' }}
-          >
-            {expanded ? '↑ Less' : '↓ Read more'}
-          </button>
           <div className="flex items-center gap-1.5">
             <IconButton label="Add note" onClick={() => onNote?.(card)} active={hasNote}>
               <MessageCircle size={16} strokeWidth={2} />

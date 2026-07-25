@@ -12,7 +12,6 @@ import { storage } from '../lib/storage.js'
 export default function TypeSchool({ library, setLibrary }) {
   const [queue, setQueue] = useState(() => buildDeck())
   const [history, setHistory] = useState([])
-  const [expandedId, setExpandedId] = useState(null)
   const [shareCard, setShareCard] = useState(null)
   const [noteCard, setNoteCard] = useState(null)
   const [showTutorial, setShowTutorial] = useState(
@@ -49,7 +48,6 @@ export default function TypeSchool({ library, setLibrary }) {
     }
     // Skipped cards just dismiss — we no longer keep a "not now" pile.
     setQueue((q) => q.slice(1))
-    setExpandedId(null)
   }
 
   const handleUndo = () => {
@@ -93,8 +91,6 @@ export default function TypeSchool({ library, setLibrary }) {
               key={top.id}
               card={top}
               depth={0}
-              expanded={expandedId === top.id}
-              onExpandToggle={(id) => setExpandedId((e) => (e === id ? null : id))}
               onDecision={handleDecision}
               onShare={(card) => setShareCard(card)}
               onNote={(card) => setNoteCard(card)}
