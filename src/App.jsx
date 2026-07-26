@@ -40,9 +40,9 @@ export default function App() {
       className="flex justify-center overflow-hidden"
       style={{ height: '100dvh' }}
     >
-      <div className="w-full max-w-[480px] h-full flex flex-col bg-paper border-x hair relative overflow-hidden">
-        <TopBar tab={tab} />
-        <main className="flex-1 min-h-0 overflow-hidden">
+      <div className="w-full max-w-[480px] h-full flex flex-col border-x hair relative overflow-hidden">
+        {/* Top bar removed — space reclaimed for larger card + Read more */}
+        <main className="flex-1 min-h-0 overflow-hidden safe-top">
           {tab === 'lessons' && <TypeSchool library={library} setLibrary={setLibrary} />}
           {tab === 'finder' && <FontFinder />}
           {tab === 'palettes' && <ColorPalettes />}
@@ -59,27 +59,6 @@ export default function App() {
           />
         )}
       </div>
-    </div>
-  )
-}
-
-function TopBar({ tab }) {
-  const labels = {
-    lessons: 'lessons',
-    finder: 'fonts',
-    palettes: 'color palate',
-    critique: 'critique',
-    saved: 'saved'
-  }
-  return (
-    <div className="safe-top px-5 pb-2 flex items-center justify-between border-b hair shrink-0">
-      <div className="flex items-baseline gap-[2px]">
-        <span className="font-logo font-light italic text-[22px] text-ink/90 leading-none">almost,</span>
-        <span className="font-logo font-semibold text-[22px] text-almost leading-none"> type.</span>
-      </div>
-      <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-muted">
-        {labels[tab]}
-      </span>
     </div>
   )
 }

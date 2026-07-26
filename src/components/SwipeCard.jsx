@@ -26,8 +26,6 @@ const SwipeCard = forwardRef(function SwipeCard(
     card,
     depth = 0, // 0 = front, 1/2 = background
     onDecision, // (id, 'like' | 'notnow') => void
-    onExpandToggle,
-    expanded = false,
     onShare,
     onNote,
     hasNote = false
@@ -37,6 +35,7 @@ const SwipeCard = forwardRef(function SwipeCard(
   const rootRef = useRef(null)
   const [dragging, setDragging] = useState(false)
   const [dx, setDx] = useState(0)
+  const [expanded, setExpanded] = useState(false)
   const pointerStart = useRef({ x: 0, y: 0, id: null, locked: false, decided: 'pending' })
   const decidedRef = useRef(false)
 
@@ -121,6 +120,7 @@ const SwipeCard = forwardRef(function SwipeCard(
   useEffect(() => {
     decidedRef.current = false
     setDx(0)
+    setExpanded(false)
   }, [card?.id])
 
   // 15° max tilt, proportional to drag distance
@@ -143,15 +143,15 @@ const SwipeCard = forwardRef(function SwipeCard(
     willChange: 'transform'
   }
 
-  // Card surface — orange-dominant gradient with a top-left glass highlight.
-  // Deep dark corner at top-left, burnt orange throughout, subtle sheen.
+  // Card surface — bright orange gradient with top-left glass highlight,
+  // matching ref 3 (glassmorphism over warm orange).
   const cardStyle = {
     background:
-      'radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,255,255,0.10), transparent 55%),' +
-      'linear-gradient(160deg, #1A0A05 0%, #4D1808 30%, #7E2609 65%, #A83A10 100%)',
-    border: '1px solid rgba(255, 255, 255, 0.10)',
+      'radial-gradient(ellipse 100% 70% at 20% 0%, rgba(255,255,255,0.14), transparent 55%),' +
+      'linear-gradient(160deg, #4B1808 0%, #7E2A0D 30%, #B14318 65%, #DA5F1E 100%)',
+    border: '1px solid rgba(255, 255, 255, 0.14)',
     boxShadow:
-      '0 24px 60px -16px rgba(85, 30, 1, 0.55), 0 8px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.35)'
+      '0 24px 60px -16px rgba(120, 45, 10, 0.55), 0 8px 24px -8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(0,0,0,0.28)'
   }
 
   return (
@@ -231,10 +231,34 @@ const SwipeCard = forwardRef(function SwipeCard(
           {/* Body */}
           <p
             className="text-[14.5px] leading-[1.6] mt-4 font-light"
-            style={{ color: 'rgba(206,206,206,0.78)' }}
+            style={{ color: 'rgba(206,206,206,0.82)' }}
           >
             {card.body}
           </p>
+
+          {/* Expanded Read More content — inline, in-place */}
+          {expanded && card.readMore && (
+            <div
+              className="text-[13.5px] leading-[1.65] mt-3 font-light animate-fade-in"
+              style={{ color: 'rgba(206,206,206,0.65)' }}
+              data-nodrag
+            >
+              {card.readMore}
+            </div>
+          )}
+
+          {/* Read more inline link — only shown when card has readMore content */}
+          {card.readMore && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              className="mt-2 text-[13px] font-medium underline underline-offset-4 transition-colors hover:opacity-80"
+              style={{ color: 'rgba(206,206,206,0.85)' }}
+              data-nodrag
+            >
+              {expanded ? '…show less' : '…read more'}
+            </button>
+          )}
 
           {/* Try block — deep burnt-orange callout, flat */}
           <div
@@ -260,7 +284,7 @@ const SwipeCard = forwardRef(function SwipeCard(
 
         </div>
 
-        {/* Footer — action buttons only, no Read More toggle */}
+        {/* Footer — action buttons only */}
         <div
           className="px-5 pt-3 pb-5 flex items-center justify-end shrink-0"
           style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}
