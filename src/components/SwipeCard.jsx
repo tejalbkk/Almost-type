@@ -35,7 +35,6 @@ const SwipeCard = forwardRef(function SwipeCard(
   const rootRef = useRef(null)
   const [dragging, setDragging] = useState(false)
   const [dx, setDx] = useState(0)
-  const [expanded, setExpanded] = useState(false)
   const pointerStart = useRef({ x: 0, y: 0, id: null, locked: false, decided: 'pending' })
   const decidedRef = useRef(false)
 
@@ -120,7 +119,6 @@ const SwipeCard = forwardRef(function SwipeCard(
   useEffect(() => {
     decidedRef.current = false
     setDx(0)
-    setExpanded(false)
   }, [card?.id])
 
   // 15° max tilt, proportional to drag distance
@@ -235,30 +233,6 @@ const SwipeCard = forwardRef(function SwipeCard(
           >
             {card.body}
           </p>
-
-          {/* Expanded Read More content — inline, in-place */}
-          {expanded && card.readMore && (
-            <div
-              className="text-[13.5px] leading-[1.65] mt-3 font-light animate-fade-in"
-              style={{ color: 'rgba(206,206,206,0.65)' }}
-              data-nodrag
-            >
-              {card.readMore}
-            </div>
-          )}
-
-          {/* Read more inline link — only shown when card has readMore content */}
-          {card.readMore && (
-            <button
-              type="button"
-              onClick={() => setExpanded((v) => !v)}
-              className="mt-2 text-[13px] font-medium underline underline-offset-4 transition-colors hover:opacity-80"
-              style={{ color: 'rgba(206,206,206,0.85)' }}
-              data-nodrag
-            >
-              {expanded ? '…show less' : '…read more'}
-            </button>
-          )}
 
           {/* Try block — deep burnt-orange callout, flat */}
           <div

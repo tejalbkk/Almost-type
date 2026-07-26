@@ -24,6 +24,7 @@ function normalizeLibrary(raw) {
 
 export default function App() {
   const [tab, setTab] = useState('lessons')
+  // Note: 'saved' tab still keys the Library route (nav label just says "Library" now)
   const [library, setLibrary] = useState(() => normalizeLibrary(storage.get('library', emptyLibrary)))
   const [seenIntro, setSeenIntro] = useState(() => storage.get('seenIntro', false))
 

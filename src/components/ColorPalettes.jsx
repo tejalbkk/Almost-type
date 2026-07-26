@@ -167,11 +167,24 @@ function searchPalettes(query, pool) {
   return results.slice(0, 8)
 }
 
+const PALETTE_CHIPS = [
+  'fintech',
+  'warm gradient',
+  'wellness',
+  'wedding',
+  'retro 70s',
+  'cyber',
+  'brutalist',
+  'art gallery'
+]
+
 export default function ColorPalettes() {
   const pool = useMemo(() => allPalettes(), [])
   const [query, setQuery] = useState('')
+  const [activeQuery, setActiveQuery] = useState('')
   const [browsed, setBrowsed] = useState(() => shuffleArr(pool).slice(0, SHOW))
   const [copied, setCopied] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   // Build-your-own state
   const [byoOpen, setByoOpen] = useState(false)
@@ -180,16 +193,28 @@ export default function ColorPalettes() {
   const [c3, setC3] = useState('')
   const [byoResult, setByoResult] = useState(null)
 
-  const activeList = query.trim() ? searchPalettes(query, pool) : browsed
+  const searchResults = activeQuery.trim() ? searchPalettes(activeQuery, pool) : null
+  const activeList = searchResults ?? browsed
 
-  const roll = () => {
-    setQuery('')
-    setBrowsed(shuffleArr(pool).slice(0, SHOW))
+  const runSearch = (input) => {
+    const q = (input ?? query).trim()
+    if (!q) return
+    setLoading(true)
+    window.setTimeout(() => {
+      setActiveQuery(q)
+      setLoading(false)
+    }, 220)
   }
 
-  const runSearch = (e) => {
-    e?.preventDefault?.()
-    // no-op; activeList is derived from query
+  const onSubmit = (e) => {
+    e.preventDefault()
+    runSearch()
+  }
+
+  const roll = () => {
+    setActiveQuery('')
+    setQuery('')
+    setBrowsed(shuffleArr(pool).slice(0, SHOW))
   }
 
   const generateByo = () => {
@@ -217,12 +242,12 @@ export default function ColorPalettes() {
           Color palate
         </div>
         <div className="text-[13px] text-muted mt-1.5 font-light">
-          60 · 30 · 10 palettes to steal. Or build your own.
+          Describe the vibe. Get palettes, distributed 60 · 30 · 10.
         </div>
 
-        {/* Search bar */}
-        <form onSubmit={runSearch} className="mt-4">
-          <div className="flex items-center gap-2 rounded-xl border border-hair bg-surface p-1.5">
+        {/* Search bar — matches Font Finder pattern */}
+        <form onSubmit={onSubmit} className="mt-4">
+          <div className="flex items-center gap-2 rounded-xl border hair bg-surface p-1.5">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -230,26 +255,42 @@ export default function ColorPalettes() {
               className="flex-1 bg-transparent px-3 py-2 text-[14px] outline-none placeholder:text-muted/60 text-ink"
             />
             <button
-              type="button"
-              onClick={roll}
-              className="px-3 py-2 rounded-lg text-[11px] font-mono uppercase tracking-[0.1em] text-muted hover:text-ink inline-flex items-center gap-1.5"
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-almost text-paper text-[12px] font-medium disabled:opacity-40 hover:bg-almost/90 transition-colors"
+              disabled={loading || !query.trim()}
             >
-              <Shuffle size={12} strokeWidth={2} />
-              Shuffle
+              {loading ? 'Looking…' : 'Find colors'}
             </button>
           </div>
         </form>
+
+        {/* Quick chips */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {PALETTE_CHIPS.map((q) => (
+            <button
+              key={q}
+              type="button"
+              onClick={() => {
+                setQuery(q)
+                runSearch(q)
+              }}
+              className="text-[11px] font-mono uppercase tracking-[0.1em] px-3 py-1.5 rounded-full border hair bg-surface text-muted hover:text-ink hover:border-ink/20 transition-colors"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Results / browse list */}
-      <div className="px-5 mt-4 space-y-3">
-        {query.trim() && activeList?.length === 0 && (
+      <div className="px-5 mt-5 space-y-3">
+        {activeQuery && searchResults?.length === 0 && (
           <div className="rounded-xl border border-hair bg-surface p-6 text-center">
             <div
               className="font-display font-medium text-[17px] text-ink"
               style={{ letterSpacing: '-0.01em' }}
             >
-              No palettes matched "{query}"
+              No palettes matched "{activeQuery}"
             </div>
             <div className="text-[12.5px] text-muted mt-2 font-light">
               Try: fintech, wellness, retro, cyber, wedding, brutalist, playful.
@@ -259,6 +300,18 @@ export default function ColorPalettes() {
         {activeList?.map((p, i) => (
           <PaletteRow key={p.name + i} palette={p} copied={copied} onCopy={copyHex} />
         ))}
+
+        {/* Shuffle a fresh set — bottom, like Font Finder's "Surprise me" */}
+        {!activeQuery && (
+          <button
+            type="button"
+            onClick={roll}
+            className="w-full py-3.5 rounded-xl border border-hair bg-surface text-ink/70 hover:text-ink text-[13px] font-medium inline-flex items-center justify-center gap-2 hover:border-ink/20 transition-colors mt-1"
+          >
+            <Shuffle size={15} strokeWidth={2} />
+            Shuffle a fresh set
+          </button>
+        )}
       </div>
 
       {/* Build Your Own — collapsible */}
