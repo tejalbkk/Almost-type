@@ -225,6 +225,98 @@ export const fontBundles = [
     ]
   ),
   bundle(
+    ['wedding', 'invitation', 'elegant', 'romance', 'romantic', 'ceremony'],
+    'Elegant on the envelope, elegant on the champagne toast. Nothing shouts.',
+    [
+      f('Display headlines', 'Cormorant Garamond', 'Serif · Italic', 'Save the date.', 'Cormorant italic at 42px is the classic invite headline. Delicate, high contrast, romantic.', 'Thin display serif', 'Signed with a fountain pen.', 'Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400'),
+      f('Display headlines', 'Playfair Display', 'Serif', 'Together, forever.', 'Playfair for names — the italic cut carries genuine warmth.', 'High-contrast serif', 'The invitation your grandmother would approve.', 'Playfair+Display:ital,wght@0,400;0,700;1,400'),
+      f('Script accents', 'Great Vibes', 'Handwriting', 'yes.', 'Script fonts for one word only — a name, a "yes", the date.', 'Formal script', 'The ligature in "of".', 'Great+Vibes'),
+      f('Script accents', 'Sacramento', 'Handwriting', 'love,', 'Sacramento is a warmer, less formal script. Works for signatures.', 'Casual script', 'Signed on a napkin.', 'Sacramento'),
+      f('Body', 'Lato', 'Sans-serif', 'Simple details, warmly said.', 'Lato at 15px for RSVP and venue details. Reads like paper.', 'Warm sans', 'The reliable friend at every wedding.', 'Lato:ital,wght@0,300;0,400;0,700;1,400'),
+      f('Body', 'Libre Baskerville', 'Serif', 'The venue at 7pm.', 'Libre Baskerville for body — old-book warmth without being fussy.', 'Reading serif', 'The paperback of your childhood.', 'Libre+Baskerville:ital,wght@0,400;0,700;1,400'),
+      f('Display headlines', 'Cinzel', 'Serif · All caps', 'CELEBRATION.', 'Cinzel is Roman inscriptional caps. Ceremonial. Use for headers only.', 'Roman caps', 'Chiseled on marble in Trajan\'s Rome.', 'Cinzel:wght@400;600;700')
+    ],
+    [
+      p('Champagne', 'Blush, ivory, warm gold. Wedding-brochure standard.', { hex: '#FBF2E6', name: 'Ivory' }, { hex: '#D4AF7A', name: 'Champagne' }, { hex: '#7B2E42', name: 'Wine' }),
+      p('Garden', 'Sage, cream, dusty rose.', { hex: '#F7F3EA', name: 'Cream' }, { hex: '#A2B29F', name: 'Sage' }, { hex: '#C88A88', name: 'Dusty Rose' }),
+      p('Velvet & Gold', 'Deep plum, ivory, muted gold.', { hex: '#F8F1EC', name: 'Cream' }, { hex: '#3E2438', name: 'Plum' }, { hex: '#B79268', name: 'Antique Gold' }),
+      p('Coastal', 'Sand, seafoam, deep navy.', { hex: '#F4EFDF', name: 'Sand' }, { hex: '#8FB5B0', name: 'Seafoam' }, { hex: '#1E3A54', name: 'Deep Navy' })
+    ]
+  ),
+  bundle(
+    ['blog', 'medium', 'writer', 'reader', 'reading', 'longform', 'essay'],
+    "Made for reading. Not made to be noticed while you're reading.",
+    [
+      f('Body', 'Merriweather', 'Serif', 'Words that stay out of the way.', 'Merriweather is designed for on-screen body. Slightly condensed, big x-height, workhorse.', 'Reading serif', 'Optimised for late-night scrolling.', 'Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400'),
+      f('Body', 'Lora', 'Serif', 'Quiet warmth at 17px.', 'Lora is a serif body font that reads warm without being old-fashioned.', 'Reading serif', 'Bookish, but modern.', 'Lora:ital,wght@0,400;0,500;0,600;0,700;1,400'),
+      f('Body', 'Source Serif 4', 'Serif · Variable', 'Long form done right.', 'Source Serif 4 is a variable serif from Adobe. Elegant, high legibility.', 'Reading serif', 'Adobe knows what it\'s doing.', 'Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400'),
+      f('Body', 'Alegreya', 'Serif', 'Body that breathes.', 'Alegreya is warm, wide, and generous. Best in 16-18px with 1.6 line-height.', 'Reading serif', 'Argentine humanist warmth.', 'Alegreya:ital,wght@0,400;0,500;0,700;1,400'),
+      f('Headlines', 'Source Sans 3', 'Sans-serif · Variable', 'Adobe Sans at its best.', 'Source Sans for kickers, section titles, captions.', 'Neutral sans', 'The corporate sans that isn\'t.', 'Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400'),
+      f('Headlines', 'Karla', 'Sans-serif · Variable', 'Karla for pull-quotes.', 'Karla for titles, tags, meta text. Its distinctive g stays quiet at body size.', 'Neutral sans', 'The grotesque that isn\'t stuffy.', 'Karla:ital,wght@0,400;0,500;0,700;1,400'),
+      f('Display', 'Poppins', 'Sans-serif', 'Bold for headlines.', 'Poppins geometric for post titles. Pair with any serif body.', 'Geometric sans', 'The internet\'s go-to display sans.', 'Poppins:wght@400;500;600;700')
+    ],
+    [
+      p('Old Paper', 'Cream page, ink brown, one green.', { hex: '#F5F0E1', name: 'Cream' }, { hex: '#3E2E23', name: 'Ink Brown' }, { hex: '#5B7C4A', name: 'Sage' }),
+      p('Reader Dark', 'Deep dark for late-night reading.', { hex: '#1A1A1E', name: 'Reader' }, { hex: '#2C2C31', name: 'Slate' }, { hex: '#F2A65A', name: 'Warm Highlight' }),
+      p('Longform Cream', 'Warm cream, warm dark, one blue.', { hex: '#F8F3E7', name: 'Cream' }, { hex: '#20221C', name: 'Ink' }, { hex: '#2C6DA4', name: 'Link Blue' }),
+      p('Manuscript', 'Vellum, sepia, deep red.', { hex: '#F4EAD5', name: 'Vellum' }, { hex: '#5C4033', name: 'Sepia' }, { hex: '#801818', name: 'Manuscript Red' })
+    ]
+  ),
+  bundle(
+    ['portfolio', 'personal', 'freelance', 'designer', 'photographer'],
+    'A portfolio is a promise. Pick fonts that keep it.',
+    [
+      f('Display', 'DM Serif Display', 'Serif', 'Case study one.', 'DM Serif Display for project titles. Elegant, decisive, one weight.', 'Editorial serif', 'The Awwwards site headline.', 'DM+Serif+Display:ital@0;1'),
+      f('Display', 'Fraunces', 'Serif · Variable', 'Yours, on record.', 'Fraunces for your name and project headlines. Adjustable via opsz.', 'Variable serif', 'Made specifically for high-craft portfolios.', 'Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700'),
+      f('Display', 'Josefin Slab', 'Serif · Slab', 'Sharp, considered.', 'Josefin Slab is a geometric slab. Modern with a whiff of art deco.', 'Slab serif', 'Deco slab, modern soul.', 'Josefin+Slab:ital,wght@0,400;0,600;0,700;1,400'),
+      f('Body', 'Josefin Sans', 'Sans-serif', 'Case description.', 'Josefin Sans pairs with Josefin Slab, geometric harmony.', 'Geometric sans', 'The Aa siblings.', 'Josefin+Sans:ital,wght@0,300;0,400;0,600;1,400'),
+      f('Body', 'Rubik', 'Sans-serif · Variable', 'Clear about the work.', 'Rubik is a rounded grotesque. Modern portfolio default.', 'Rounded grotesque', 'The Google-y sans.', 'Rubik:ital,wght@0,400;0,500;0,600;0,700;1,400'),
+      f('Body', 'Nunito Sans', 'Sans-serif', 'What the design achieves.', 'Nunito Sans at 15-16px reads warm and unfussy.', 'Rounded sans', 'Nunito with the softness dialed back.', 'Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400'),
+      f('Mono / caption', 'Space Mono', 'Monospace', '/portfolio.v2', 'Space Mono for URLs, tags, captions. Adds personality to metadata.', 'Character mono', 'The IBM Selectric of Google Fonts.', 'Space+Mono:ital,wght@0,400;0,700;1,400')
+    ],
+    [
+      p('Portfolio Bright', 'Bright cream, deep ink, one accent.', { hex: '#FFFEF9', name: 'Bright Cream' }, { hex: '#111111', name: 'True Ink' }, { hex: '#FF4B2E', name: 'Signal Red' }),
+      p('Dieter', 'Braun-inspired: light grey, orange, black.', { hex: '#E8E7E4', name: 'Braun Grey' }, { hex: '#1E1E1E', name: 'Braun Black' }, { hex: '#DE5622', name: 'Braun Orange' }),
+      p('Editorial White', 'Off-white paper with slate + blue.', { hex: '#F8F7F2', name: 'Paper' }, { hex: '#2A3B4C', name: 'Slate Blue' }, { hex: '#E4572E', name: 'Coral' }),
+      p('Portfolio Dark', 'Dark mode portfolio with a pop.', { hex: '#0F1113', name: 'Ink' }, { hex: '#1B1E22', name: 'Elevation' }, { hex: '#4FD1C5', name: 'Aqua' })
+    ]
+  ),
+  bundle(
+    ['restaurant', 'menu', 'cafe', 'bakery', 'food', 'kitchen', 'dining'],
+    'Read from ten feet across a candlelit table. Priced accordingly.',
+    [
+      f('Display', 'Abril Fatface', 'Serif · Display', 'Chef\'s Table.', 'Abril Fatface is the definitive menu display serif. High-contrast, confident.', 'Display serif', 'Menu-cover confidence.', 'Abril+Fatface'),
+      f('Display', 'Yeseva One', 'Serif', 'Tonight\'s pick.', 'Yeseva One for section headers. Warm high-contrast serif.', 'Display serif', 'Reads like handwritten chalk on slate.', 'Yeseva+One'),
+      f('Display', 'Alfa Slab One', 'Slab · Heavy', 'MENU.', 'Alfa Slab for section labels and prices. Chunky, memorable.', 'Heavy slab', 'The typographic equivalent of a woodblock.', 'Alfa+Slab+One'),
+      f('Body', 'Lato', 'Sans-serif', 'Roasted, pressed, and served with...', 'Lato for descriptions. Reads friendly at 14-16px.', 'Warm sans', 'The go-to menu body.', 'Lato:wght@300;400;700'),
+      f('Body', 'Karla', 'Sans-serif · Variable', 'Wild mushroom risotto.', 'Karla for descriptions with slightly more character than Lato.', 'Neutral sans', 'Grotesque with warmth.', 'Karla:wght@400;500;700'),
+      f('Script', 'Kaushan Script', 'Handwriting', 'chef\'s special', 'Handwritten script for chef\'s recommendations. One line at a time.', 'Script', 'Written in butter.', 'Kaushan+Script')
+    ],
+    [
+      p('Farm Table', 'Butcher paper, ink, one deep red.', { hex: '#F1E9D2', name: 'Butcher Paper' }, { hex: '#2C1810', name: 'Coffee Ink' }, { hex: '#8B1E1E', name: 'Marinara' }),
+      p('Bistro', 'Cream, dark wood, one gold.', { hex: '#F6EFDD', name: 'Cream' }, { hex: '#40261D', name: 'Wood Brown' }, { hex: '#C1953A', name: 'Bistro Gold' }),
+      p('Bakery', 'Flour white, warm brown, cinnamon.', { hex: '#FDF9EF', name: 'Flour White' }, { hex: '#7C5A3C', name: 'Toast' }, { hex: '#B75E22', name: 'Cinnamon' }),
+      p('Fine Dining', 'Black tablecloth, ivory plate, gold rim.', { hex: '#0F0E0C', name: 'Ink' }, { hex: '#1A1815', name: 'Off-Black' }, { hex: '#C9A961', name: 'Gilded' })
+    ]
+  ),
+  bundle(
+    ['nonprofit', 'ngo', 'charity', 'community', 'cause', 'humanitarian'],
+    'Trust first. Every design decision reads the same as your annual report.',
+    [
+      f('Display', 'Merriweather', 'Serif', 'Our mission.', 'Merriweather headlines carry gravitas without stuffiness.', 'Reading serif', 'The mid-year report you actually read.', 'Merriweather:ital,wght@0,400;0,700;0,900'),
+      f('Display', 'Libre Baskerville', 'Serif', 'For the record.', 'Libre Baskerville for annual reports, letters to donors.', 'Classic serif', 'The letterhead that means it.', 'Libre+Baskerville:ital,wght@0,400;0,700;1,400'),
+      f('Body', 'Open Sans', 'Sans-serif · Variable', 'What we did this year.', 'Open Sans is the world\'s most trusted body sans. 40+ billion websites can\'t be wrong.', 'Neutral sans', 'The default that earned it.', 'Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'),
+      f('Body', 'PT Sans', 'Sans-serif', 'From our supporters.', 'PT Sans for body — Cyrillic-first design that reads warm in Latin too.', 'Humanist sans', 'The Russian sans that went global.', 'PT+Sans:ital,wght@0,400;0,700;1,400'),
+      f('Body', 'IBM Plex Sans', 'Sans-serif', 'Programmes we run.', 'Plex Sans for a modern nonprofit voice — quietly technical.', 'Neutral sans', 'IBM outdid themselves.', 'IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400')
+    ],
+    [
+      p('Solidarity', 'Cream, deep green, warm red.', { hex: '#F5F0E4', name: 'Paper' }, { hex: '#1E4030', name: 'Deep Green' }, { hex: '#C43A2B', name: 'Alert Red' }),
+      p('Blue Hope', 'Off-white, hospital blue, sunshine yellow.', { hex: '#F4F7F9', name: 'Snow' }, { hex: '#0F5985', name: 'Hope Blue' }, { hex: '#F4C430', name: 'Sunshine' }),
+      p('Earth', 'Muted stone, forest, terracotta.', { hex: '#EFEBE0', name: 'Stone' }, { hex: '#2F4E3A', name: 'Forest' }, { hex: '#B65D3F', name: 'Terracotta' }),
+      p('Ocean Rescue', 'Ice, deep sea blue, coral.', { hex: '#EAF1F5', name: 'Ice' }, { hex: '#0B3A57', name: 'Deep Sea' }, { hex: '#FF7B54', name: 'Coral' })
+    ]
+  ),
+  bundle(
     ['DEFAULT', 'minimal', 'clean', 'modern'],
     "The safe choice. Not boring. Just clear. Sometimes that's exactly what you need.",
     [
@@ -248,6 +340,11 @@ export const fontBundles = [
 ]
 
 export const quickChips = [
+  'wedding invitation',
+  'blog reader',
+  'portfolio',
+  'restaurant menu',
+  'nonprofit',
   'dark moody luxury',
   'playful learning app',
   'brutalist tech startup',

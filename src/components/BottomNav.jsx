@@ -1,50 +1,54 @@
-import { GraduationCap, Type, Eye, BookMarked } from 'lucide-react'
+import { GraduationCap, Type, Palette, Bookmark } from 'lucide-react'
 
-// Bottom tab bar — floating liquid-glass pill.
-// 4 items: School, Fonts, Eye, Library. (Critique lives in Intro / future deep links.)
+// Bottom nav — floating light-glass pill. 4 items.
+// Ref: whitish semi-transparent pill with white icons + labels.
 
 export default function BottomNav({ tab, onChange }) {
   const items = [
-    { id: 'school',  label: 'School',  Icon: GraduationCap },
-    { id: 'finder',  label: 'Fonts',   Icon: Type          },
-    { id: 'eye',     label: 'Eye',     Icon: Eye           },
-    { id: 'library', label: 'Library', Icon: BookMarked    }
+    { id: 'lessons',  label: 'Lessons',       Icon: GraduationCap },
+    { id: 'finder',   label: 'Fonts',         Icon: Type          },
+    { id: 'palettes', label: 'Color palate',  Icon: Palette       },
+    { id: 'saved',    label: 'Saved',         Icon: Bookmark      }
   ]
 
   return (
-    <nav className="px-3 pb-3 pt-1 safe-bottom">
+    <nav className="px-4 pb-4 pt-1 safe-bottom shrink-0">
       <div
-        className="rounded-2xl border border-white/[0.08] shadow-nav overflow-hidden"
+        className="rounded-full overflow-hidden"
         style={{
-          background: 'rgba(36, 30, 23, 0.55)',
+          background: 'rgba(238, 229, 206, 0.14)',
           backdropFilter: 'blur(28px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(28px) saturate(180%)'
+          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+          border: '1px solid rgba(238, 229, 206, 0.18)',
+          boxShadow:
+            '0 12px 32px -8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)'
         }}
       >
-        <ul className="mx-auto max-w-[480px] grid grid-cols-4">
+        <ul className="grid grid-cols-4">
           {items.map(({ id, label, Icon }) => {
             const active = tab === id
             return (
-              <li key={id}>
+              <li key={id} className="relative">
                 <button
                   type="button"
                   onClick={() => onChange(id)}
                   aria-pressed={active}
-                  className="w-full h-[58px] flex flex-col items-center justify-center gap-[3px] relative transition-colors"
+                  className="w-full h-[56px] flex flex-col items-center justify-center gap-[3px] transition-colors relative"
                 >
-                  {/* Active state — orange top indicator + colored icon */}
                   {active && (
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] rounded-b-full bg-almost" />
+                    <span
+                      className="absolute top-1.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full"
+                      style={{ background: '#FF5B3A' }}
+                    />
                   )}
-
                   <Icon
                     size={20}
                     strokeWidth={active ? 2 : 1.6}
-                    style={{ color: active ? '#FF5B3A' : 'rgba(238,229,206,0.45)' }}
+                    style={{ color: active ? '#EEE5CE' : 'rgba(238,229,206,0.6)' }}
                   />
                   <span
-                    className="text-[9px] font-mono uppercase tracking-[0.12em]"
-                    style={{ color: active ? '#FF5B3A' : 'rgba(238,229,206,0.45)' }}
+                    className="text-[9.5px] font-medium tracking-[0.02em]"
+                    style={{ color: active ? '#EEE5CE' : 'rgba(238,229,206,0.6)' }}
                   >
                     {label}
                   </span>

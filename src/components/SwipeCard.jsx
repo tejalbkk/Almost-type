@@ -143,13 +143,15 @@ const SwipeCard = forwardRef(function SwipeCard(
     willChange: 'transform'
   }
 
-  // Card surface — vertical linear gradient from deep blue-black to burnt
-  // orange, with a subtle warm outer glow that picks up the body gradient.
+  // Card surface — orange-dominant gradient with a top-left glass highlight.
+  // Deep dark corner at top-left, burnt orange throughout, subtle sheen.
   const cardStyle = {
-    background: 'linear-gradient(180deg, #010013 0%, #551E01 100%)',
-    border: '1px solid rgba(255, 91, 58, 0.12)',
+    background:
+      'radial-gradient(ellipse 90% 60% at 20% 0%, rgba(255,255,255,0.10), transparent 55%),' +
+      'linear-gradient(160deg, #1A0A05 0%, #4D1808 30%, #7E2609 65%, #A83A10 100%)',
+    border: '1px solid rgba(255, 255, 255, 0.10)',
     boxShadow:
-      '0 24px 60px -16px rgba(85, 30, 1, 0.55), 0 8px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)'
+      '0 24px 60px -16px rgba(85, 30, 1, 0.55), 0 8px 24px -8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.35)'
   }
 
   return (
