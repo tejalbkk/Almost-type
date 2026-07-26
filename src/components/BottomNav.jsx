@@ -14,14 +14,18 @@ export default function BottomNav({ tab, onChange }) {
   return (
     <nav className="px-4 pb-4 pt-1 safe-bottom shrink-0">
       <div
-        className="rounded-full"
+        className="rounded-full relative overflow-hidden"
         style={{
-          background: 'rgba(238, 229, 206, 0.55)',
-          backdropFilter: 'blur(32px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-          border: '1px solid rgba(255, 255, 255, 0.35)',
+          background:
+            'linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 100%)',
+          backdropFilter: 'blur(40px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+          border: '1px solid rgba(255, 255, 255, 0.28)',
           boxShadow:
-            '0 12px 32px -8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4)'
+            '0 16px 40px -12px rgba(0,0,0,0.5),' +
+            ' 0 4px 12px -4px rgba(0,0,0,0.25),' +
+            ' inset 0 1px 0 rgba(255,255,255,0.45),' +
+            ' inset 0 -1px 0 rgba(255,255,255,0.08)'
         }}
       >
         <ul className="grid grid-cols-4">
