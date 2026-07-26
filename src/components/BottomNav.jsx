@@ -1,61 +1,55 @@
-import { GraduationCap, Type, Palette, Bookmark } from 'lucide-react'
+import { GraduationCap, Palette, Bookmark } from 'lucide-react'
 
-// Bottom nav — solid light-glass pill, matching ref image.
-// 4 items: Lessons / Fonts / Color palate / Library.
+// Bottom nav — glassmorphism pill.
+// 4 tabs: Lessons, Fonts (Aa text), Color palate, Library.
+
+const tabs = [
+  { id: 'lessons',  label: 'Lessons',      icon: GraduationCap },
+  { id: 'finder',   label: 'Fonts',        icon: null }, // "Aa" text glyph
+  { id: 'palettes', label: 'Color palate', icon: Palette },
+  { id: 'saved',    label: 'Library',      icon: Bookmark }
+]
 
 export default function BottomNav({ tab, onChange }) {
-  const items = [
-    { id: 'lessons',  label: 'Lessons',       Icon: GraduationCap },
-    { id: 'finder',   label: 'Fonts',         Icon: Type          },
-    { id: 'palettes', label: 'Color palate',  Icon: Palette       },
-    { id: 'saved',    label: 'Library',       Icon: Bookmark      }
-  ]
-
   return (
-    <nav className="px-4 pb-4 pt-1 safe-bottom shrink-0">
+    <nav className="px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-1 shrink-0 flex justify-center">
       <div
-        className="rounded-full relative overflow-hidden"
+        className="flex items-center gap-1 rounded-full px-3 py-2 border"
         style={{
           background:
-            'linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 100%)',
+            'linear-gradient(to bottom, rgba(255,255,255,0.22), rgba(255,255,255,0.10))',
           backdropFilter: 'blur(40px) saturate(200%)',
           WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-          border: '1px solid rgba(255, 255, 255, 0.28)',
+          borderColor: 'rgba(255,255,255,0.28)',
           boxShadow:
-            '0 16px 40px -12px rgba(0,0,0,0.5),' +
-            ' 0 4px 12px -4px rgba(0,0,0,0.25),' +
-            ' inset 0 1px 0 rgba(255,255,255,0.45),' +
-            ' inset 0 -1px 0 rgba(255,255,255,0.08)'
+            'inset 0 1px 0 rgba(255,255,255,0.45),' +
+            ' inset 0 -1px 0 rgba(255,255,255,0.08),' +
+            ' 0 8px 32px rgba(0,0,0,0.35)'
         }}
       >
-        <ul className="grid grid-cols-4">
-          {items.map(({ id, label, Icon }) => {
-            const active = tab === id
-            return (
-              <li key={id}>
-                <button
-                  type="button"
-                  onClick={() => onChange(id)}
-                  aria-pressed={active}
-                  className="w-full h-[58px] flex flex-col items-center justify-center gap-[3px] transition-opacity"
-                  style={{ opacity: active ? 1 : 0.55 }}
-                >
-                  <Icon
-                    size={20}
-                    strokeWidth={active ? 2 : 1.7}
-                    style={{ color: '#FFFFFF' }}
-                  />
-                  <span
-                    className="text-[10px] font-medium"
-                    style={{ color: '#FFFFFF' }}
-                  >
-                    {label}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+        {tabs.map(({ id, label, icon: Icon }) => {
+          const active = tab === id
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => onChange(id)}
+              aria-pressed={active}
+              className={`flex min-w-[64px] min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-full px-2 text-white transition-opacity duration-200 ${
+                active ? 'opacity-100' : 'opacity-55'
+              }`}
+            >
+              {Icon ? (
+                <Icon size={22} strokeWidth={1.75} />
+              ) : (
+                <span className="text-[19px] font-medium leading-none tracking-tight">
+                  Aa
+                </span>
+              )}
+              <span className="font-mono text-[11px] leading-tight">{label}</span>
+            </button>
+          )
+        })}
       </div>
     </nav>
   )
